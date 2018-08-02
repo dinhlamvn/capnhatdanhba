@@ -7,6 +7,7 @@ import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.vn.lcd.sql.ContactHelper;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -14,12 +15,14 @@ public class MainActivity extends AppCompatActivity {
 
     TextView txtContacts;
     Button btnLoadContact;
+    ContactHelper contactHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        contactHelper = new ContactHelper(getApplicationContext());
         btnLoadContact = (Button) findViewById(R.id.load_contact);
         txtContacts = (TextView) findViewById(R.id.text_contact_list);
 
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (contactCursor != null && contactCursor.moveToFirst()) {
             do {
-                String id = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.Contacts._ID));
+                String id = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.RawContacts._ID));
                 String name = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 int hasPhoneNumber = Integer.parseInt(contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
 
@@ -54,7 +57,13 @@ public class MainActivity extends AppCompatActivity {
 
                         do {
                             String phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            String phoneType = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
                             sb.append("Contact: ").append(name).append(", Phone number: ").append(phoneNumber).append("\n\n");
+
+                            if (name.equals("Vy 14QVP")) {
+                                String newPhoneNumber = phoneNumber + "00000";
+                                contactHelper.updateContactPhoneNumber(getContentResolver(), Long.valueOf(id), Integer.valueOf(phoneType), newPhoneNumber);
+                            }
                         } while (phoneCursor.moveToNext());
                     }
                 }
