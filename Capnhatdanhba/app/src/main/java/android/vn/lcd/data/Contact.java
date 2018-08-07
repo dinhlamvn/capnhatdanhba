@@ -2,8 +2,20 @@ package android.vn.lcd.data;
 
 public class Contact {
 
-    private String name;
-    private String phone;
+    private int id = -1;
+    private String name = "";
+    private boolean hasPhone = false;
+    private String mobilePhone = "";
+    private String homePhone = "";
+    private String workPhone = "";
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -13,11 +25,35 @@ public class Contact {
         this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
+    public boolean isHasPhone() {
+        return hasPhone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setHasPhone(boolean hasPhone) {
+        this.hasPhone = hasPhone;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+    public void setHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+    }
+
+    public String getWorkPhone() {
+        return workPhone;
+    }
+
+    public void setWorkPhone(String workPhone) {
+        this.workPhone = workPhone;
     }
 }
