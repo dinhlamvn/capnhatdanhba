@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Cap nhat danh ba</string>
+
+
+
+    <!--Image view description-->
+    <string name="des_contact_icon">Icon avatar of contact</string>
+    <string name="opt_contact">Option of contact</string>
 </resources>

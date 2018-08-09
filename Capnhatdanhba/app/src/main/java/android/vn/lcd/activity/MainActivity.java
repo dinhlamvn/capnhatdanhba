@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
 
 
+
+
         btnLoadContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
