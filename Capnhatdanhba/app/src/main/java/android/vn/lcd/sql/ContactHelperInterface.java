@@ -12,5 +12,6 @@ public interface ContactHelperInterface {
 
     public boolean updateSingleContact(int contactId, String newPhoneNumber, int typePhoneNumber);
 
-    public boolean updateContactList(List<Contact> listContact);
+    public boolean updateContactList(List<Contact> listContact, boolean isUpdate);
+
 }

@@ -21,6 +21,7 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
     private Context mContext;
 
     public ContactHelper(Context context) {
+        super(context);
         mContext = context;
     }
 
@@ -113,7 +114,7 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
     }
 
     @Override
-    public boolean updateContactList(List<Contact> listContact) {
+    public boolean updateContactList(List<Contact> listContact, boolean isUpdate) {
 
         for (Contact contact : listContact) {
 
@@ -123,7 +124,7 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
                     String pn = contact.getHomePhone();
                     updateSingleContact(
                             contact.getId(),
-                            changePhoneNumberWithFormat(pn, getFormatPhoneNumber(pn)),
+                            changePhoneNumberWithFormat(pn, getFormatPhoneNumber(pn, isUpdate), isUpdate),
                             ContactsContract.CommonDataKinds.Phone.TYPE_HOME);
                 }
 
@@ -131,7 +132,7 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
                     String pn = contact.getMobilePhone();
                     updateSingleContact(
                             contact.getId(),
-                            changePhoneNumberWithFormat(pn, getFormatPhoneNumber(pn)),
+                            changePhoneNumberWithFormat(pn, getFormatPhoneNumber(pn, isUpdate), isUpdate),
                             ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
                 }
 
@@ -139,7 +140,7 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
                     String pn = contact.getWorkPhone();
                     updateSingleContact(
                             contact.getId(),
-                            changePhoneNumberWithFormat(pn, getFormatPhoneNumber(pn)),
+                            changePhoneNumberWithFormat(pn, getFormatPhoneNumber(pn, isUpdate), isUpdate),
                             ContactsContract.CommonDataKinds.Phone.TYPE_WORK_MOBILE);
                 }
 

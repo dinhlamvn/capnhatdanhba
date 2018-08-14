@@ -1,9 +1,103 @@
 <resources>
-    <string name="app_name">Cap nhat danh ba</string>
+    <string name="app_name">Cập nhật danh bạ</string>
 
+    <!--Button text-->
+    <string name="btn_load_contact_text">Load</string>
+    <string name="btn_auto_sync">Cập nhật or Phục hồi</string>
+    <string name="btn_handmade_sycn">Thủ công</string>
+    <string name="btn_yes">Đồng ý</string>
+    <string name="btn_cancel">Hủy bỏ</string>
+    <string name="btn_textview_details"><u>Xem chi tiết</u></string>
+
+    <!--Radio text-->
+    <string name="rdb_update">Cập nhật</string>
+    <string name="rdb_restore">Phục hồi</string>
+
+    <!--Menu item text-->
+    <string name="item1">Đổi đầu số</string>
+    <string name="item2">Đổi số bằng tên</string>
+    <string name="item3">Đổi tên bằng số</string>
+    <string name="item4">About</string>
 
 
     <!--Image view description-->
     <string name="des_contact_icon">Icon avatar of contact</string>
     <string name="opt_contact">Option of contact</string>
+
+    <!--Text view text-->
+    <string name="des_sync">Dữ liệu số điện thoại sẽ được cập nhật hoặc phục hồi. Bạn muốn?</string>
+
+    <!--Phone number start phone array-->
+    <string-array name="viettels">
+        <item>0162</item>
+        <item>0163</item>
+        <item>0164</item>
+        <item>0165</item>
+        <item>0166</item>
+        <item>0167</item>
+        <item>0168</item>
+        <item>0169</item>
+    </string-array>
+
+    <string-array name="viettels_new">
+        <item>032</item>
+        <item>033</item>
+        <item>034</item>
+        <item>035</item>
+        <item>036</item>
+        <item>037</item>
+        <item>038</item>
+        <item>039</item>
+    </string-array>
+    
+    <string-array name="mobifones">
+        <item>0120</item>
+        <item>0121</item>
+        <item>0122</item>
+        <item>0126</item>
+        <item>0128</item>
+    </string-array>
+
+    <string-array name="mobifones_new">
+        <item>070</item>
+        <item>079</item>
+        <item>077</item>
+        <item>076</item>
+        <item>078</item>
+    </string-array>
+
+    <string-array name="vinaphones">
+        <item>0123</item>
+        <item>0124</item>
+        <item>0125</item>
+        <item>0127</item>
+        <item>0129</item>
+    </string-array>
+
+    <string-array name="vinaphones_new">
+        <item>083</item>
+        <item>084</item>
+        <item>085</item>
+        <item>081</item>
+        <item>082</item>
+    </string-array>
+
+    <string-array name="vietnammobile">
+        <item>0186</item>
+        <item>0188</item>
+    </string-array>
+
+    <string-array name="vietnammobile_new">
+        <item>056</item>
+        <item>058</item>
+    </string-array>
+    
+    <string-array name="gmobile">
+        <item>0199</item>
+    </string-array>
+
+    <string-array name="gmobile_new">
+        <item>059</item>
+    </string-array>
+
 </resources>

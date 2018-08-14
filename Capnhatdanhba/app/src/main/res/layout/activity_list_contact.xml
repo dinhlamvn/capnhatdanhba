@@ -1,12 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" android:background="#fff" android:focusableInTouchMode="true">
 
-    <android.support.v7.widget.RecyclerView
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_margin="0dp"
+        android:layout_weight="1"
+        app:cardBackgroundColor="@color/White"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true">
 
-    </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:padding="0dp"
+            android:gravity="center"
+            android:text="DANH SÁCH DANH BẠ"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:background="#303030"
+            android:focusable="false" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="40dp"
+            android:hint="Tìm kiếm"
+            android:background="@android:drawable/editbox_background"
+            android:drawableLeft="@drawable/search"
+            android:drawablePadding="5dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_contact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="80dp">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:id="@+id/btn_auto"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textColor="@android:color/white"
+        android:background="@android:color/holo_blue_dark"
+        android:shadowColor="@android:color/holo_blue_light"
+        android:text="@string/btn_auto_sync"
+        android:textSize="20sp"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:drawableLeft="@drawable/sync" />
+
 
 </LinearLayout>
