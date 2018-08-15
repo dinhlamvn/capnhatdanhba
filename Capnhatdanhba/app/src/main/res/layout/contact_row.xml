@@ -29,8 +29,8 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/contact_start_name_character"
+    <ImageView
+        android:id="@+id/btn_call"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

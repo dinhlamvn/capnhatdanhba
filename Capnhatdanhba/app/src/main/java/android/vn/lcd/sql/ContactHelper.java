@@ -109,49 +109,180 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
     }
 
     @Override
-    public boolean updateSingleContact(int contactId, String newPhoneNumber, int typePhoneNumber) {
+    public int updateSingleContact(int contactId, String newPhoneNumber, int typePhoneNumber) {
         return updateContact(contactId, newPhoneNumber, typePhoneNumber);
     }
 
     @Override
-    public boolean updateContactList(List<Contact> listContact, boolean isUpdate) {
+    public List<HashMap<String, HashMap<String, String>>> updateContactList(List<Contact> listContact, boolean isUpdate) {
+
+        List<HashMap<String, HashMap<String, String>>> resultSet = new ArrayList<>();
 
         for (Contact contact : listContact) {
 
             if (contact.isHasPhone()) {
 
+                resultSet.add(new HashMap<String, HashMap<String, String>>());
+                HashMap<String, String> hm = new HashMap<>();
+
                 if (!contact.getHomePhone().equals("")) {
-                    String pn = contact.getHomePhone();
-                    updateSingleContact(
-                            contact.getId(),
-                            changePhoneNumberWithFormat(pn, getFormatPhoneNumber(pn, isUpdate), isUpdate),
-                            ContactsContract.CommonDataKinds.Phone.TYPE_HOME);
+
+                    String currentPhoneNumber = ContactPhoneNumberHelper.formatPhoneNumberWithoutWhiteSpace(contact.getHomePhone());
+                    String newPhoneNumber = ContactPhoneNumberHelper
+                            .formatPhoneNumberWithoutWhiteSpace(changePhoneNumber(contact.getHomePhone(), isUpdate));
+
+                    if (!currentPhoneNumber.equals(newPhoneNumber)) {
+                        int i = this.updateSingleContact(
+                                contact.getId(),
+                                ContactPhoneNumberHelper.formatPhoneNumber(newPhoneNumber),
+                                ContactsContract.CommonDataKinds.Phone.TYPE_HOME
+                        );
+                        if (i > 0) {
+                            hm.put("HOME_OLD", currentPhoneNumber);
+                            hm.put("HOME_NEW", newPhoneNumber);
+                        }
+                    }
                 }
 
                 if (!contact.getMobilePhone().equals("")) {
-                    String pn = contact.getMobilePhone();
-                    updateSingleContact(
-                            contact.getId(),
-                            changePhoneNumberWithFormat(pn, getFormatPhoneNumber(pn, isUpdate), isUpdate),
-                            ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+
+                    String currentPhoneNumber = ContactPhoneNumberHelper.formatPhoneNumberWithoutWhiteSpace(contact.getMobilePhone());
+                    String newPhoneNumber = ContactPhoneNumberHelper
+                            .formatPhoneNumberWithoutWhiteSpace(changePhoneNumber(contact.getMobilePhone(), isUpdate));
+
+                    if (!currentPhoneNumber.equals(newPhoneNumber)) {
+                        int i = this.updateSingleContact(
+                                contact.getId(),
+                                ContactPhoneNumberHelper.formatPhoneNumber(newPhoneNumber),
+                                ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE
+                        );
+                        if (i > 0) {
+                            hm.put("MOBILE_OLD", currentPhoneNumber);
+                            hm.put("MOBILE_NEW", newPhoneNumber);
+                        }
+                    }
                 }
 
                 if (!contact.getWorkPhone().equals("")) {
-                    String pn = contact.getWorkPhone();
-                    updateSingleContact(
-                            contact.getId(),
-                            changePhoneNumberWithFormat(pn, getFormatPhoneNumber(pn, isUpdate), isUpdate),
-                            ContactsContract.CommonDataKinds.Phone.TYPE_WORK_MOBILE);
+
+                    String currentPhoneNumber = ContactPhoneNumberHelper.formatPhoneNumberWithoutWhiteSpace(contact.getWorkPhone());
+                    String newPhoneNumber = ContactPhoneNumberHelper
+                            .formatPhoneNumberWithoutWhiteSpace(changePhoneNumber(contact.getWorkPhone(), isUpdate));
+
+                    if (!currentPhoneNumber.equals(newPhoneNumber)) {
+                        int i = this.updateSingleContact(
+                                contact.getId(),
+                                ContactPhoneNumberHelper.formatPhoneNumber(newPhoneNumber),
+                                ContactsContract.CommonDataKinds.Phone.TYPE_WORK_MOBILE
+                        );
+
+                        if (i > 0) {
+                            hm.put("MOBILE_WORK_OLD", currentPhoneNumber);
+                            hm.put("MOBILE_WORK_NEW", newPhoneNumber);
+                        }
+                    }
                 }
+                resultSet.get(resultSet.size() - 1).put(contact.getName(), hm);
+            }
+
+        }
+        return resultSet;
+    }
+
+    @Override
+    public List<HashMap<String, HashMap<String, String>>> updateContactListWithStartNumber(List<Contact> listContact, String oldStartNumber, String newStartNumber) {
+
+        List<HashMap<String, HashMap<String, String>>> resultSet = new ArrayList<>();
+
+        for (Contact contact : listContact) {
+
+            if (contact.isHasPhone()) {
+
+                resultSet.add(new HashMap<String, HashMap<String, String>>());
+                HashMap<String, String> hm = new HashMap<>();
+
+                if (!contact.getHomePhone().equals("")) {
+
+                    String currentPhoneNumber = ContactPhoneNumberHelper.formatPhoneNumberWithoutWhiteSpace(contact.getHomePhone());
+
+                    if (currentPhoneNumber.startsWith(oldStartNumber)) {
+                        String newPhoneNumber = ContactPhoneNumberHelper
+                                .formatPhoneNumberWithoutWhiteSpace(
+                                        ContactPhoneNumberHelper.changeStartNumberPhone(currentPhoneNumber, oldStartNumber, newStartNumber));
+
+                        if (!currentPhoneNumber.equals(newPhoneNumber)) {
+                            int i = this.updateSingleContact(
+                                    contact.getId(),
+                                    ContactPhoneNumberHelper.formatPhoneNumber(newPhoneNumber),
+                                    ContactsContract.CommonDataKinds.Phone.TYPE_HOME
+                            );
+                            if (i > 0) {
+                                hm.put("HOME_OLD", currentPhoneNumber);
+                                hm.put("HOME_NEW", newPhoneNumber);
+                            }
+                        }
+                    }
+                }
+
+                if (!contact.getMobilePhone().equals("")) {
+
+                    String currentPhoneNumber = ContactPhoneNumberHelper.formatPhoneNumberWithoutWhiteSpace(contact.getMobilePhone());
+
+                    if (currentPhoneNumber.startsWith(oldStartNumber)) {
+
+                        String newPhoneNumber = ContactPhoneNumberHelper
+                                .formatPhoneNumberWithoutWhiteSpace(
+                                        ContactPhoneNumberHelper.changeStartNumberPhone(currentPhoneNumber, oldStartNumber, newStartNumber));
+
+                        if (!currentPhoneNumber.equals(newPhoneNumber)) {
+                            int i = this.updateSingleContact(
+                                    contact.getId(),
+                                    ContactPhoneNumberHelper.formatPhoneNumber(newPhoneNumber),
+                                    ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE
+                            );
+                            if (i > 0) {
+                                hm.put("MOBILE_OLD", currentPhoneNumber);
+                                hm.put("MOBILE_NEW", newPhoneNumber);
+                            }
+                        }
+                    }
+
+
+                }
+
+                if (!contact.getWorkPhone().equals("")) {
+
+                    String currentPhoneNumber = ContactPhoneNumberHelper.formatPhoneNumberWithoutWhiteSpace(contact.getWorkPhone());
+
+                    if (currentPhoneNumber.startsWith(oldStartNumber)) {
+
+                        String newPhoneNumber = ContactPhoneNumberHelper
+                                .formatPhoneNumberWithoutWhiteSpace(
+                                        ContactPhoneNumberHelper.changeStartNumberPhone(currentPhoneNumber, oldStartNumber, newStartNumber));
+
+                        if (!currentPhoneNumber.equals(newPhoneNumber)) {
+                            int i = this.updateSingleContact(
+                                    contact.getId(),
+                                    ContactPhoneNumberHelper.formatPhoneNumber(newPhoneNumber),
+                                    ContactsContract.CommonDataKinds.Phone.TYPE_WORK_MOBILE
+                            );
+
+                            if (i > 0) {
+                                hm.put("MOBILE_WORK_OLD", currentPhoneNumber);
+                                hm.put("MOBILE_WORK_NEW", newPhoneNumber);
+                            }
+                        }
+                    }
+                }
+                resultSet.get(resultSet.size() - 1).put(contact.getName(), hm);
 
             }
 
         }
-        return false;
+        return resultSet;
     }
 
-
-    private boolean updateContact(int contactId, String newPhone, int type) {
+    private int updateContact(int contactId, String newPhone, int type) {
 
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
@@ -170,14 +301,15 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
                 .withValue(ContactsContract.CommonDataKinds.Phone.DATA, newPhone)
                 .build());
         try {
-            mContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-            return true;
+            return mContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops).length;
         } catch (RemoteException ex) {
-            return false;
+            return 0;
         } catch (OperationApplicationException e) {
-            return false;
+            return 0;
         }
     }
+
+
 
 
 }

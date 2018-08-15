@@ -10,35 +10,25 @@
         android:layout_margin="0dp"
         android:layout_weight="1"
         app:cardBackgroundColor="@color/White"
-        app:cardCornerRadius="5dp"
         app:cardElevation="5dp"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="false">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:padding="0dp"
+            android:background="#303030"
+            android:focusable="false"
             android:gravity="center"
+            android:padding="0dp"
             android:text="DANH SÁCH DANH BẠ"
             android:textColor="#fff"
-            android:textSize="18sp"
-            android:background="#303030"
-            android:focusable="false" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="40dp"
-            android:hint="Tìm kiếm"
-            android:background="@android:drawable/editbox_background"
-            android:drawableLeft="@drawable/search"
-            android:drawablePadding="5dp"/>
+            android:textSize="18sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_contact"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="80dp">
+            android:layout_marginTop="40dp">
 
         </android.support.v7.widget.RecyclerView>
 

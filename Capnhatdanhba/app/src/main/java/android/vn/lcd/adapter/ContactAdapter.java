@@ -1,9 +1,14 @@
 package android.vn.lcd.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.lcd.vn.capnhatdanhba.R;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -13,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.vn.lcd.data.Contact;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,7 +30,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     private ArrayList<Contact> mList;
     private Context mContext;
-    private String contactStartNameCharacter = "";
     private int[] avatars = new int[] {
             R.drawable.contact_avatar_1,
             R.drawable.contact_avatar_2,
@@ -38,7 +43,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     public ContactAdapter(Context context, ArrayList<Contact> list) {
         this.mContext = context;
         this.mList = list;
-        this.contactStartNameCharacter = "";
     }
 
 
@@ -53,18 +57,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        Contact contact = mList.get(position);
+        final Contact contact = mList.get(position);
 
-        if (!contact.getName().substring(0, 1).equals(contactStartNameCharacter)) {
-            positionAvatar = random.nextInt(5);
-            contactStartNameCharacter = contact.getName().substring(0, 1);
-            holder.txtContactStartName.setText(contactStartNameCharacter);
-            holder.txtContactStartName.setVisibility(View.VISIBLE);
-        } else {
-            holder.txtContactStartName.setVisibility(View.GONE);
-        }
-
-
+        positionAvatar = random.nextInt(5);
         FrameLayout.LayoutParams flp = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT
@@ -89,7 +84,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         flp.leftMargin = 10 * TypedValue.COMPLEX_UNIT_DIP;
         holder.imgContactIcon.setLayoutParams(flp);
         holder.imgContactIcon.setBackgroundResource(avatars[positionAvatar]);
-        holder.imgContactIcon.setText(contactStartNameCharacter);
+        holder.imgContactIcon.setText(String.valueOf(contact.getName().charAt(0)));
         holder.imgContactIcon.setGravity(Gravity.CENTER);
         holder.imgContactIcon.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         holder.imgContactIcon.setTextColor(Color.rgb(255, 255, 255));
@@ -123,16 +118,23 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         holder.txtContactPhoneNumber.setTextColor(Color.BLACK);
         holder.txtContactPhoneNumber.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 
+        Bitmap bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.call);
         flp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
+                (int)(bmp.getWidth() * 0.5),
+                (int)(bmp.getWidth() * 0.5)
         );
         flp.gravity = Gravity.END | Gravity.CENTER_VERTICAL;
         flp.rightMargin = TypedValue.COMPLEX_UNIT_DIP * 30;
-        holder.txtContactStartName.setLayoutParams(flp);
-        holder.txtContactStartName.setTextColor(Color.rgb(123, 123, 123));
-        holder.txtContactStartName.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
-        holder.txtContactStartName.setTypeface(Typeface.DEFAULT);
+        holder.btnCall.setLayoutParams(flp);
+        holder.btnCall.setImageBitmap(bmp);
+        holder.btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getMobilePhone()));
+                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(callIntent);
+            }
+        });
     }
 
     @Override
@@ -147,7 +149,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         TextView txtContactName;
         TextView txtContactPhoneNumber;
         TextView imgContactIcon;
-        TextView txtContactStartName;
+        ImageView btnCall;
 
 
         ViewHolder(View itemView) {
@@ -157,7 +159,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             txtContactName = (TextView) itemView.findViewById(R.id.contact_name);
             txtContactPhoneNumber = (TextView) itemView.findViewById(R.id.contact_phone_number);
             imgContactIcon = (TextView) itemView.findViewById(R.id.contact_icon);
-            txtContactStartName = (TextView) itemView.findViewById(R.id.contact_start_name_character);
+            btnCall = (ImageView) itemView.findViewById(R.id.btn_call);
         }
     }
 
