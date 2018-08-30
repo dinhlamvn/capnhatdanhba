@@ -24,6 +24,9 @@
         <activity android:name="android.vn.lcd.activity.ListContactActivity"
             android:theme="@style/AppTheme"/>
 
+        <activity android:name="android.vn.lcd.activity.AutoChangeHeadNumberActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
     </application>
 
 </manifest>

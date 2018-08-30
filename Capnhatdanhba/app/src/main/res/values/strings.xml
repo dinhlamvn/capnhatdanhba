@@ -2,8 +2,9 @@
     <string name="app_name">Cập nhật danh bạ</string>
 
     <!--Button text-->
-    <string name="btn_load_contact_text">Load</string>
-    <string name="btn_auto_sync">Thực hiện cập nhật</string>
+    <string name="btn_load_contact_text">BẮT ĐẦU</string>
+    <string name="btn_auto_sync">ĐỒNG BỘ</string>
+    <string name="btn_auto_restore">PHỤC HỒI</string>
     <string name="btn_handmade_sycn">Thủ công</string>
     <string name="btn_yes">Đồng ý</string>
     <string name="btn_cancel">Hủy bỏ</string>
@@ -34,6 +35,11 @@
     <!--Text view text-->
     <string name="des_sync">Dữ liệu số điện thoại danh bạ sẽ được cập nhật hoặc phục hồi theo quy định mới. Bạn muốn?</string>
     <string name="des_sync_handmade">Dữ liệu số điện thoại danh bạ sẽ được cập nhật từ đầu số cũ trở thành đầu số mới.</string>
+    <string name="des_main">
+        Từ ngày 15/09/2018 các thuê bao 11 số của các nhà mạng Viettle, MobiFone, VinaPhone, Vietnamobile và GMobile sẽ
+        chuyển về 10 số.
+        \n<b>Chi tiết chuyển đổi như sau:</b>
+    </string>
 
     <!--Phone number start phone array-->
     <string-array name="viettels">

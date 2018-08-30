@@ -20,9 +20,18 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
 
     private Context mContext;
 
-    public ContactHelper(Context context) {
+    private static ContactHelper instance = null;
+
+    private ContactHelper(Context context) {
         super(context);
         mContext = context;
+    }
+
+    public static ContactHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new ContactHelper(context);
+        }
+        return instance;
     }
 
     @Override

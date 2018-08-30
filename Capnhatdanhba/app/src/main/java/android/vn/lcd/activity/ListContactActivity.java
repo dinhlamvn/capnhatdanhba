@@ -1,16 +1,23 @@
 package android.vn.lcd.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.lcd.vn.capnhatdanhba.R;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +31,7 @@ import android.vn.lcd.data.Contact;
 import android.vn.lcd.interfaces.ViewConstructor;
 import android.vn.lcd.adapter.ContactAdapter;
 import android.vn.lcd.sql.ContactHelper;
+import android.vn.lcd.utils.ScreenPreferences;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -31,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,21 +48,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class ListContactActivity extends AppCompatActivity implements ViewConstructor{
+public class ListContactActivity extends AppCompatActivity implements ViewConstructor {
 
 
     private RecyclerView mListContactView;
     private ContactAdapter mAdapter;
     private ContactHelper contactHelper;
     private ArrayList<Contact> mDataList;
-    Button btnAutoSync;
     private boolean isUpdate = true;
-    private int idMenu = R.id.item1;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_list_contact);
 
         initParams();
@@ -63,6 +70,11 @@ public class ListContactActivity extends AppCompatActivity implements ViewConstr
         initListener();
 
         loadData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -78,13 +90,11 @@ public class ListContactActivity extends AppCompatActivity implements ViewConstr
         int id = item.getItemId();
         switch (id) {
             case R.id.item1: {
-                idMenu = id;
-                item.setChecked(true);
+                loadAutoChangeHeadNumberScreen();
                 break;
             }
             case R.id.item2: {
-                idMenu = id;
-                item.setChecked(true);
+                createDialogConfirmUpdateStartNumber();
                 break;
             }
             case R.id.item3: {
@@ -96,12 +106,11 @@ public class ListContactActivity extends AppCompatActivity implements ViewConstr
 
     @Override
     public void initParams() {
-        contactHelper = new ContactHelper(getApplicationContext());
+        contactHelper = ContactHelper.getInstance(getApplicationContext());
     }
 
     @Override
     public void initLayout() {
-        btnAutoSync = (Button) findViewById(R.id.btn_auto);
         mListContactView = findViewById(R.id.list_contact);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mListContactView.setLayoutManager(mLayoutManager);
@@ -110,25 +119,6 @@ public class ListContactActivity extends AppCompatActivity implements ViewConstr
     @Override
     public void initListener() {
 
-        btnAutoSync.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                switch (idMenu) {
-                    case R.id.item1: {
-                        createDialogConfirmAutoSync();
-                        break;
-                    }
-                    case R.id.item2: {
-                        createDialogConfirmUpdateStartNumber();
-                        break;
-                    }
-                    case R.id.item3: {
-                        break;
-                    }
-                }
-            }
-        });
     }
 
     @Override
@@ -139,6 +129,10 @@ public class ListContactActivity extends AppCompatActivity implements ViewConstr
         mListContactView.setAdapter(mAdapter);
     }
 
+    private void loadAutoChangeHeadNumberScreen() {
+        Intent intent = new Intent(this, AutoChangeHeadNumberActivity.class);
+        startActivity(intent);
+    }
 
     private void createDialogConfirmAutoSync() {
         final Dialog dialog = new Dialog(this);
@@ -169,26 +163,7 @@ public class ListContactActivity extends AppCompatActivity implements ViewConstr
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = getResources().getString(R.string.confirm_title);
-                String message = getResources().getString(R.string.confirm_text);
-                String btnYes = getResources().getString(R.string.btn_yes);
-                String btnNo = getResources().getString(R.string.btn_cancel);
 
-
-                AlertDialog alertDialog = new AlertDialog.Builder(ListContactActivity.this)
-                        .setTitle(title)
-                        .setMessage(message)
-                        .setCancelable(true)
-                        .setPositiveButton(btnYes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialog.dismiss();
-                                new SyncContact().execute(isUpdate);
-                            }
-                        })
-                        .setNegativeButton(btnNo, null)
-                        .create();
-                alertDialog.show();
             }
         });
 
@@ -279,107 +254,9 @@ public class ListContactActivity extends AppCompatActivity implements ViewConstr
 
     class SyncContact extends AsyncTask<Boolean, Void, HashMap<String, String>> {
 
-        ProgressDialog mDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mDialog = new ProgressDialog(ListContactActivity.this);
-            mDialog.setTitle("");
-            mDialog.setMessage("Đang cập nhật...");
-            mDialog.setCancelable(false);
-            mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            mDialog.show();
-        }
-
         @Override
         protected HashMap<String, String> doInBackground(Boolean... booleans) {
-
-            boolean isUpdate = booleans[0];
-
-            int cnt = 0;
-            HashMap<String, String> hashMap = new HashMap<>();
-            StringBuilder sb = new StringBuilder();
-
-            List<HashMap<String, HashMap<String, String>>> resultSet = contactHelper.updateContactList(mDataList, isUpdate);
-
-
-            for (HashMap<String, HashMap<String, String>> hm : resultSet) {
-                Set<String> keys = hm.keySet();
-
-                for (String s : keys) {
-                    HashMap<String, String> hmTempt = hm.get(s);
-                    cnt = cnt + hmTempt.size();
-
-                    if (hmTempt.size() > 0) {
-                        sb.append("[").append(s).append("]");
-                        sb.append("\n");
-
-                        List<String> listKey = new ArrayList<>(hmTempt.keySet());
-
-                        for (int i = 0; i < listKey.size(); i = i + 2) {
-                            sb.append("\"" + hmTempt.get(listKey.get(i)) + "\"");
-                            sb.append(" -> ");
-                            sb.append("\"" + hmTempt.get(listKey.get(i + 1)) + "\"");
-                            sb.append("\n");
-                            sb.append("--------------------------------------");
-                            sb.append("\n");
-                        }
-                    }
-                }
-            }
-
-            hashMap.put("TOTAL", String.valueOf(cnt / 2));
-            hashMap.put("DETAILS", sb.toString());
-
-            return hashMap;
-
-        }
-
-        @Override
-        protected void onPostExecute(HashMap<String, String> hm) {
-            super.onPostExecute(hm);
-            if (mDialog.isShowing()) {
-                mDialog.setMessage("Đang load lại dữ liệu...");
-            }
-            final int resultTotal = Integer.parseInt(hm.get("TOTAL"));
-            final String resultDetails = hm.get("DETAILS");
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mDataList.clear();
-                    mDataList.addAll(contactHelper.getContactList());
-                    Collections.sort(mDataList, new SortName());
-                    mAdapter.notifyDataSetChanged();
-                    mDialog.dismiss();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ListContactActivity.this)
-                            .setTitle("Thông báo")
-                            .setMessage("Đã cập nhật " + resultTotal + " số điện thoại")
-                            .setCancelable(false)
-                            .setPositiveButton("Thoát", null);
-                    if (resultTotal > 0) {
-                        builder.setNegativeButton("Xem chi tiết", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Dialog dialog = new Dialog(ListContactActivity.this);
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.dialog_details_update);
-                                dialog.setCancelable(true);
-                                final TextView txtDetails = (TextView) dialog.findViewById(R.id.txt_details);
-
-                                txtDetails.setText(resultDetails);
-
-                                dialog.show();
-                            }
-                        });
-                    }
-
-                    AlertDialog alert = builder.create();
-
-                    alert.show();
-                }
-            }, 1500);
+            return null;
         }
     }
 
