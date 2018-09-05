@@ -13,15 +13,14 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.vn.lcd.interfaces.ViewConstructor;
+import android.vn.lcd.interfaces.IViewConstructor;
 import android.vn.lcd.utils.UpdateContactTask;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class AutoChangeHeadNumberActivity extends Activity implements ViewConstructor {
+public class AutoChangeHeadNumberActivity extends Activity implements IViewConstructor {
 
     private Button btnUpdate, btnRestore;
 

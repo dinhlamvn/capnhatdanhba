@@ -1,6 +1,6 @@
 package android.vn.lcd.interfaces;
 
-public interface ViewConstructor {
+public interface IViewConstructor {
 
     void initParams();
 

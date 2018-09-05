@@ -5,7 +5,7 @@
     <string name="btn_load_contact_text">BẮT ĐẦU</string>
     <string name="btn_auto_sync">ĐỒNG BỘ</string>
     <string name="btn_auto_restore">PHỤC HỒI</string>
-    <string name="btn_handmade_sycn">Thủ công</string>
+    <string name="btn_handmade_sycn">THỰC HIỆN</string>
     <string name="btn_yes">Đồng ý</string>
     <string name="btn_cancel">Hủy bỏ</string>
     <string name="btn_textview_details"><u>Xem chi tiết</u></string>
@@ -40,6 +40,11 @@
         chuyển về 10 số.
         \n<b>Chi tiết chuyển đổi như sau:</b>
     </string>
+    <string name="option_1"><u>Đổi đầu số theo nghị định</u></string>
+    <string name="option_2"><u>Phục hồi đầu số theo nghị định</u></string>
+    <string name="option_3"><u>Đổi đầu số cho trước</u></string>
+    <string name="option_4"><u>Giúp đỡ</u></string>
+
 
     <!--Phone number start phone array-->
     <string-array name="viettels">

@@ -17,22 +17,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.vn.lcd.data.Contact;
+import android.vn.lcd.data.ContactPhoneNumberHelper;
+import android.vn.lcd.sql.ContactHelper;
+import android.vn.lcd.utils.AlphabetSort;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
 
     private ArrayList<Contact> mList;
+    private ArrayList<Contact> parentList;
     private Context mContext;
 
     public ContactAdapter(Context context, ArrayList<Contact> list) {
         this.mContext = context;
-        this.mList = list;
+        this.mList = new ArrayList<>(list);
+        this.parentList = new ArrayList<>(list);
     }
 
 
@@ -127,6 +133,40 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     @Override
     public int getItemCount() {
         return mList.size();
+    }
+
+    public void filter(String text) {
+        mList.clear();
+
+        if (text.trim().equals("")) {
+            this.mList.addAll(this.parentList);
+        } else {
+            for (Contact item : this.parentList) {
+                if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+                    this.mList.add(item);
+                }
+            }
+        }
+        Collections.sort(this.mList, new AlphabetSort());
+        notifyDataSetChanged();
+    }
+
+    public void filterByPhoneNumber(String p) {
+        mList.clear();
+
+        if (p.trim().equals("")) {
+            this.mList.addAll(this.parentList);
+        } else {
+            for (Contact item : this.parentList) {
+                String phoneNumber = ContactPhoneNumberHelper
+                        .formatPhoneNumberWithoutWhiteSpace(item.getMobilePhone());
+                if (phoneNumber.toLowerCase().startsWith(p.toLowerCase())) {
+                    this.mList.add(item);
+                }
+            }
+        }
+        Collections.sort(this.mList, new AlphabetSort());
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
