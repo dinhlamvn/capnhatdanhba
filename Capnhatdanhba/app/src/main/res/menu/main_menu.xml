@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/network" android:checkableBehavior="single">
+
+        <item android:id="@+id/select_all" android:title="Tất cả"
+            android:checked="true"/>
+
+        <item android:id="@+id/select_viettle" android:title="Viettle" />
+
+        <item android:id="@+id/select_mobi" android:title="Mobiphone" />
+
+        <item android:id="@+id/select_vina" android:title="Vinaphone" />
+
+        <item android:id="@+id/select_vietnam" android:title="Vietnamobile" />
+
+        <item android:id="@+id/select_gmobile" android:title="GMobilen" />
+
+    </group>
 
 
-    <item android:id="@+id/search_box"
-        android:title="Tìm theo tên"
-        android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="always"
-        app:actionViewClass="android.support.v7.widget.SearchView" />
-
-    <item android:id="@+id/item1" android:title="@string/item1"/>
-    <item android:id="@+id/item2" android:title="@string/item2" />
-    <item android:id="@+id/item3" android:title="@string/item3" />
 </menu>

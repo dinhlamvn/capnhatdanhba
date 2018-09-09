@@ -3,19 +3,19 @@
 
     <item>
         <layer-list>
-            <item android:left="5dp" android:top="5dp">
+            <item>
                 <shape>
-                    <corners android:radius="40dp" />
-                    <solid android:color="#D6D6D6" />
+                    <corners android:radius="10dp" />
+                    <solid android:color="#d0d0d0" />
                 </shape>
             </item>
 
-            <item android:bottom="3dp" android:right="3dp" android:left="6dp" android:top="6dp">
+            <item android:bottom="1dp" android:right="1dp" android:left="1dp" android:top="1dp">
                 <shape>
-                    <solid android:color="#FFFFFF" />
-                    <corners android:radius="40dp"/>
-                    <padding android:bottom="15dp" android:left="10dp"
-                        android:top="15dp" android:right="10dp" />
+                    <solid android:color="#fcfcfc" />
+                    <corners android:radius="10dp"/>
+                    <padding android:bottom="30dp" android:left="30dp"
+                        android:top="30dp" android:right="30dp" />
                 </shape>
             </item>
         </layer-list>

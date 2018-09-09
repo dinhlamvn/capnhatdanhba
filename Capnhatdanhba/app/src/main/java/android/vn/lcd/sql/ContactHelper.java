@@ -11,8 +11,10 @@ import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.vn.lcd.data.Contact;
 import android.vn.lcd.data.ContactPhoneNumberHelper;
+import android.vn.lcd.utils.AlphabetSort;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
     private Context mContext;
 
     private static ContactHelper instance = null;
+    private ArrayList<Contact> contacts;
 
     private ContactHelper(Context context) {
         super(context);
@@ -32,6 +35,14 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
             instance = new ContactHelper(context);
         }
         return instance;
+    }
+
+    public void loadContact() {
+        contacts = getContactList();
+    }
+
+    public ArrayList<Contact> getContacts() {
+        return contacts;
     }
 
     @Override
@@ -113,9 +124,45 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
 
             contactCursor.close();
         }
-
+        Collections.sort(results, new AlphabetSort());
         return results;
     }
+
+    public void filterList11() {
+        ArrayList<Contact> list = new ArrayList<>();
+        for (Contact contact : contacts) {
+            if (ContactPhoneNumberHelper.isPhoneNumber11(mContext, contact.getMobilePhone())) {
+                list.add(contact);
+            }
+        }
+        contacts.clear();
+        contacts.addAll(list);
+    }
+
+    public void filterList10() {
+        ArrayList<Contact> list = new ArrayList<>();
+        for (Contact contact : contacts) {
+            if (ContactPhoneNumberHelper.isPhoneNumber10(mContext, contact.getMobilePhone())) {
+                list.add(contact);
+            }
+        }
+        contacts.clear();
+        contacts.addAll(list);
+    }
+
+    public void filterListCustom() {
+        ArrayList<Contact> list = new ArrayList<>();
+        for (Contact contact : contacts) {
+            if (!contact.getMobilePhone().equals("")
+                    || !contact.getWorkPhone().equals("")
+                    || !contact.getHomePhone().equals("")) {
+                list.add(contact);
+            }
+        }
+        contacts.clear();
+        contacts.addAll(list);
+    }
+
 
     @Override
     public int updateSingleContact(int contactId, String newPhoneNumber, int typePhoneNumber) {

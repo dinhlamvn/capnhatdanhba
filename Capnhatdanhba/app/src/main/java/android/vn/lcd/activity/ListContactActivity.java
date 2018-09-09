@@ -1,37 +1,56 @@
 package android.vn.lcd.activity;
 
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.lcd.vn.capnhatdanhba.R;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.Html;
+import android.text.InputType;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.vn.lcd.data.Contact;
+import android.vn.lcd.data.ContactPhoneNumberHelper;
 import android.vn.lcd.interfaces.IViewConstructor;
 import android.vn.lcd.adapter.ContactAdapter;
 import android.vn.lcd.sql.ContactHelper;
-import android.vn.lcd.utils.AlphabetSort;
+import android.vn.lcd.utils.UpdateContactTask;
+import android.vn.lcd.utils.UpdateStartNumberTask;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-public class ListContactActivity extends AppCompatActivity implements IViewConstructor, SearchView.OnQueryTextListener {
+public class ListContactActivity extends AppCompatActivity implements IViewConstructor {
 
 
-    private RecyclerView mListContactView;
     private ContactAdapter mAdapter;
-    private ContactHelper contactHelper;
     private ArrayList<Contact> mDataList;
-    private boolean isUpdate = true;
+    private String typeValue;
+    private ArrayList<Contact> mUpdateList;
+    private ActionBar mActionbar;
+    private ProgressDialog mDialog;
+    private EditText edtOldPhoneNumber;
+    private EditText edtNewPhoneNumber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,13 +58,35 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_list_contact);
 
+        initAndShowDialog();
+
         initParams();
+
+        loadData();
 
         initLayout();
 
         initListener();
 
-        loadData();
+        setUpTitle();
+
+        setUpSubTitleActionBar(mUpdateList.size());
+
+        hideDialog();
+    }
+
+    private void setUpTitle() {
+        switch (typeValue) {
+            case "11-TO-10":
+                setUpTitleActionBar("Đổi " + getResources().getString(R.string.option_1));
+                break;
+            case "10-TO-11":
+                setUpTitleActionBar("Đổi " + getResources().getString(R.string.option_2));
+                break;
+            case "CUSTOM":
+                setUpTitleActionBar(getResources().getString(R.string.option_3));
+                break;
+        }
     }
 
     @Override
@@ -53,72 +94,236 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
         super.onResume();
     }
 
+    private void setUpTitleActionBar(String title) {
+        if (mActionbar != null) {
+            mActionbar.setTitle(title);
+        }
+    }
+
+    private void setUpSubTitleActionBar(int size) {
+        if (mActionbar != null) {
+            mActionbar.setSubtitle("Tìm được " + size + " số");
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+        if (!typeValue.equals("CUSTOM")) {
+            MenuInflater menuInflater = getMenuInflater();
 
-        MenuItem menuItem = (MenuItem) menu.findItem(R.id.search_box);
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-
-        if (searchManager != null) {
-            searchView.setSearchableInfo(
-                    searchManager.getSearchableInfo(getComponentName()));
+            menuInflater.inflate(R.menu.main_menu, menu);
         }
-
-        searchView.setOnQueryTextListener(this);
-
-
         return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String s) {
-
-        mAdapter.filter(s);
-
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String s) {
-        return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
         switch (id) {
-            case R.id.item1: {
-                loadAutoChangeHeadNumberScreen();
+            case R.id.select_all:{
+                item.setChecked(true);
+                refreshList("ALL");
                 break;
             }
-            case R.id.item2: {
-                loadChangeHeadNumberScreen();
+            case R.id.select_viettle: {
+                item.setChecked(true);
+                refreshList("VIETTLE");
                 break;
             }
-            case R.id.item3: {
+            case R.id.select_mobi: {
+                item.setChecked(true);
+                refreshList("MOBIPHONE");
+                break;
+            }
+            case R.id.select_vina: {
+                item.setChecked(true);
+                refreshList("VINAPHONE");
+                break;
+            }
+            case R.id.select_vietnam: {
+                item.setChecked(true);
+                refreshList("VIETNAMOBILE");
+                break;
+            }
+            case R.id.select_gmobile: {
+                item.setChecked(true);
+                refreshList("GMOBILLE");
                 break;
             }
         }
-        return super.onOptionsItemSelected(item);
+
+        mAdapter.notifyDataSetChanged();
+        setUpSubTitleActionBar(mUpdateList.size());
+
+        return true;
     }
-
-
 
     @Override
     public void initParams() {
-        contactHelper = ContactHelper.getInstance(getApplicationContext());
+        mActionbar = getSupportActionBar();
+        Bundle bundle = getIntent().getBundleExtra("DATA");
+        typeValue = bundle.getString("TYPE_VALUE");
     }
 
     @Override
     public void initLayout() {
-        mListContactView = findViewById(R.id.list_contact);
+
+        LinearLayout layout = findViewById(R.id.layout);
+
+        LinearLayout.LayoutParams llp;
+
+
+        if (typeValue.equals("CUSTOM")) {
+            edtOldPhoneNumber = new EditText(this);
+            llp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            llp.topMargin = 15;
+            llp.leftMargin = 15;
+            llp.rightMargin = 15;
+            edtOldPhoneNumber.setLayoutParams(llp);
+            edtOldPhoneNumber.setHint(getResources().getString(R.string.edt_start_number_hint));
+            edtOldPhoneNumber.setTextSize(14f);
+            edtOldPhoneNumber.setTextColor(Color.rgb(34,34,34));
+            edtOldPhoneNumber.setHintTextColor(Color.rgb(198, 198, 198));
+            edtOldPhoneNumber.setInputType(InputType.TYPE_CLASS_PHONE);
+            edtOldPhoneNumber.setBackgroundResource(android.R.drawable.edit_text);
+            edtOldPhoneNumber.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String startNumber = s.toString();
+                    refreshListStartNumber(startNumber);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
+            layout.addView(edtOldPhoneNumber);
+
+            edtNewPhoneNumber = new EditText(this);
+            llp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            llp.leftMargin = 15;
+            llp.rightMargin = 15;
+            edtNewPhoneNumber.setLayoutParams(llp);
+            edtNewPhoneNumber.setHint(getResources().getString(R.string.edt_replace_start_number_hint));
+            edtNewPhoneNumber.setTextSize(14f);
+            edtNewPhoneNumber.setTextColor(Color.rgb(34,34,34));
+            edtNewPhoneNumber.setHintTextColor(Color.rgb(198, 198, 198));
+            edtNewPhoneNumber.setInputType(InputType.TYPE_CLASS_PHONE);
+            edtNewPhoneNumber.setBackgroundResource(android.R.drawable.edit_text);
+            layout.addView(edtNewPhoneNumber);
+        }
+
+        FrameLayout frameList = new FrameLayout(this);
+        llp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1
+        );
+        frameList.setLayoutParams(llp);
+
+        RecyclerView mRecycleView = new RecyclerView(this);
+        FrameLayout.LayoutParams flp = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+        );
+        mRecycleView.setLayoutParams(flp);
+        mRecycleView.setBackgroundColor(Color.parseColor("#ffffff"));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mListContactView.setLayoutManager(mLayoutManager);
+        mRecycleView.setLayoutManager(mLayoutManager);
+        mRecycleView.setAdapter(mAdapter);
+        frameList.addView(mRecycleView);
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.save_icon);
+        ImageView btnSync = new ImageView(this);
+        flp = new FrameLayout.LayoutParams(
+                (int)(bitmap.getWidth() * 0.51),
+                (int)(bitmap.getHeight() * 0.51)
+        );
+        flp.gravity = Gravity.BOTTOM | Gravity.END;
+        flp.rightMargin = 25;
+        flp.bottomMargin = 80;
+        btnSync.setLayoutParams(flp);
+        btnSync.setImageBitmap(bitmap);
+        btnSync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (typeValue.equals("CUSTOM")) {
+                    if (edtOldPhoneNumber != null && edtNewPhoneNumber != null && (edtOldPhoneNumber.getText().toString().equals(""))
+                            ||edtNewPhoneNumber.getText().toString().equals("")) {
+                        Toast.makeText(ListContactActivity.this, "Chưa nhập dữ liệu vào", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
+                if (mUpdateList.size() > 0) {
+                    String title = getResources().getString(R.string.confirm_title);
+                    String btnYes = getResources().getString(R.string.btn_yes);
+                    String btnNo = getResources().getString(R.string.btn_cancel);
+                    String message = "";
+
+                    switch (typeValue) {
+                        case "CUSTOM":
+                            message = "Bạn muốn chuyển đổi <b>" + mUpdateList.size() + "</b> số có đầu số <b>"
+                                    + edtOldPhoneNumber.getText().toString()
+                                    + "</b> sang đầu số <b>"
+                                    + edtNewPhoneNumber.getText().toString()
+                                    + "</b>?";
+                            break;
+                        case "11-TO-10":
+                            message = "Bạn muốn chuyển đổi <b>" + mUpdateList.size() + "</b> số có <b>11 số</b> sang số có <b>10 số</b>?";
+                            break;
+                        case "10-TO-11":
+                            message = "Bạn muốn chuyển đổi <b>" + mUpdateList.size() + "</b> số có <b>10 số</b> sang số có <b>11 số</b>?";
+                            break;
+                    }
+
+                    AlertDialog alertDialog = new AlertDialog.Builder(ListContactActivity.this)
+                            .setTitle(title)
+                            .setMessage(Html.fromHtml(message))
+                            .setCancelable(true)
+                            .setPositiveButton(btnYes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    if (typeValue.equals("11-TO-10")) {
+                                        new UpdateContactTask(ListContactActivity.this, mUpdateList).execute(true);
+                                    } else if (typeValue.equals("10-TO-11")){
+                                        new UpdateContactTask(ListContactActivity.this, mUpdateList).execute(false);
+                                    } else if (typeValue.equals("CUSTOM")) {
+                                        String a = edtOldPhoneNumber.getText().toString();
+                                        String b = edtNewPhoneNumber.getText().toString();
+                                        new UpdateStartNumberTask(ListContactActivity.this).execute(a,b);
+                                    }
+                                }
+                            })
+                            .setNegativeButton(btnNo, null)
+                            .create();
+                    alertDialog.show();
+                } else {
+                    Toast.makeText(ListContactActivity.this, getResources().getString(R.string.do_empty_list), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        frameList.addView(btnSync);
+
+        layout.addView(frameList);
     }
 
     @Override
@@ -128,19 +333,68 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
 
     @Override
     public void loadData() {
-        mDataList = contactHelper.getContactList();
-        Collections.sort(mDataList, new AlphabetSort());
-        mAdapter = new ContactAdapter(getApplicationContext(), mDataList);
-        mListContactView.setAdapter(mAdapter);
+        ContactHelper.getInstance(getApplicationContext()).loadContact();
+        if (typeValue.equals("11-TO-10")) {
+            ContactHelper.getInstance(getApplicationContext()).filterList11();
+        } else if (typeValue.equals("10-TO-11")) {
+            ContactHelper.getInstance(getApplicationContext()).filterList10();
+        } else if (typeValue.equals("CUSTOM")) {
+            ContactHelper.getInstance(getApplicationContext()).filterListCustom();
+        }
+        mDataList = new ArrayList<>(ContactHelper.getInstance(getApplicationContext()).getContacts());
+        mUpdateList = new ArrayList<>(ContactHelper.getInstance(getApplicationContext()).getContacts());
+        mAdapter = new ContactAdapter(this, mUpdateList, typeValue);
     }
 
-    private void loadAutoChangeHeadNumberScreen() {
-        Intent intent = new Intent(this, AutoChangeHeadNumberActivity.class);
-        startActivity(intent);
+    private void refreshList(String networkName) {
+        mUpdateList.clear();
+        if (networkName.toLowerCase().equals("all")) {
+            mUpdateList.addAll(mDataList);
+            return;
+        }
+
+        for (Contact contact : mDataList) {
+
+            if (typeValue.equals("11-TO-10")) {
+                if (ContactPhoneNumberHelper
+                        .getNetworkNameByPhoneNumber11(this, contact.getMobilePhone()).equals(networkName)) {
+                    mUpdateList.add(contact);
+                }
+            } else if (typeValue.equals("10-TO-11")) {
+                if (ContactPhoneNumberHelper
+                        .getNetworkNameByPhoneNumber10(this, contact.getMobilePhone()).equals(networkName)) {
+                    mUpdateList.add(contact);
+                }
+            }
+        }
     }
 
-    private void loadChangeHeadNumberScreen() {
-        Intent intent = new Intent(this, ChangeHeadNumberActivity.class);
-        startActivity(intent);
+    private void refreshListStartNumber(String startNumber) {
+        mUpdateList.clear();
+
+        for (Contact contact : mDataList) {
+
+            String pn = ContactPhoneNumberHelper.formatPhoneNumberWithoutWhiteSpace(contact.getMobilePhone());
+            if (pn.startsWith(startNumber)) {
+                mUpdateList.add(contact);
+            }
+        }
+        mAdapter.notifyDataSetChanged();
+        setUpSubTitleActionBar(mUpdateList.size());
+    }
+
+    private void initAndShowDialog() {
+        mDialog = new ProgressDialog(this);
+        mDialog.setTitle(null);
+        mDialog.setMessage("Đang tải dữ liệu");
+        mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mDialog.setCancelable(false);
+        mDialog.show();
+    }
+
+    private void hideDialog() {
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
     }
 }

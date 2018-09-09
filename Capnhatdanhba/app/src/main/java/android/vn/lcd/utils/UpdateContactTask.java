@@ -5,12 +5,15 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.lcd.vn.capnhatdanhba.R;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Window;
 import android.vn.lcd.activity.ListContactActivity;
+import android.vn.lcd.activity.ResultActivity;
 import android.vn.lcd.data.Contact;
 import android.vn.lcd.sql.ContactHelper;
 import android.widget.TextView;
@@ -26,11 +29,11 @@ public class UpdateContactTask extends AsyncTask<Boolean, Void, HashMap<String, 
 
     private ProgressDialog mDialog;
     private Context mContext;
-    private ArrayList<Contact> mDataList;
+    private ArrayList<Contact> mUpdateList;
 
-    public UpdateContactTask(Context context) {
+    public UpdateContactTask(Context context, ArrayList<Contact> updateList) {
         this.mContext = context;
-        this.mDataList = ContactHelper.getInstance(context).getContactList();
+        this.mUpdateList = new ArrayList<>(updateList);
     }
 
     @Override
@@ -54,7 +57,7 @@ public class UpdateContactTask extends AsyncTask<Boolean, Void, HashMap<String, 
         StringBuilder sb = new StringBuilder();
 
         List<HashMap<String, HashMap<String, String>>> resultSet =
-                ContactHelper.getInstance(mContext).updateContactList(mDataList, isUpdate);
+                ContactHelper.getInstance(mContext).updateContactList(mUpdateList, isUpdate);
 
 
         for (HashMap<String, HashMap<String, String>> hm : resultSet) {
@@ -103,31 +106,12 @@ public class UpdateContactTask extends AsyncTask<Boolean, Void, HashMap<String, 
                     mDialog.dismiss();
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
-                        .setTitle("Thông báo")
-                        .setMessage("Đã cập nhật " + resultTotal + " số điện thoại")
-                        .setCancelable(false)
-                        .setPositiveButton("Thoát", null);
-                if (resultTotal > 0) {
-                    builder.setNegativeButton("Xem chi tiết", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Dialog dialog = new Dialog(mContext);
-                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            dialog.setContentView(R.layout.dialog_details_update);
-                            dialog.setCancelable(true);
-                            final TextView txtDetails = (TextView) dialog.findViewById(R.id.txt_details);
-
-                            txtDetails.setText(resultDetails);
-
-                            dialog.show();
-                        }
-                    });
-                }
-
-                AlertDialog alert = builder.create();
-
-                alert.show();
+                Intent intent = new Intent(mContext, ResultActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("RESULT_TOTAL", resultTotal);
+                bundle.putString("RESULT_VALUE", resultDetails);
+                intent.putExtra("result", bundle);
+                mContext.startActivity(intent);
             }
         }, 1500);
     }

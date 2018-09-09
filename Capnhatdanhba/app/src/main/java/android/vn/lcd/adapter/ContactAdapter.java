@@ -1,14 +1,9 @@
 package android.vn.lcd.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.lcd.vn.capnhatdanhba.R;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -18,27 +13,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.vn.lcd.data.Contact;
 import android.vn.lcd.data.ContactPhoneNumberHelper;
-import android.vn.lcd.sql.ContactHelper;
-import android.vn.lcd.utils.AlphabetSort;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
 
 
     private ArrayList<Contact> mList;
-    private ArrayList<Contact> parentList;
     private Context mContext;
+    private String type;
 
-    public ContactAdapter(Context context, ArrayList<Contact> list) {
+    public ContactAdapter(Context context, ArrayList<Contact> list, String type) {
         this.mContext = context;
-        this.mList = new ArrayList<>(list);
-        this.parentList = new ArrayList<>(list);
+        this.mList = list;
+        this.type = type;
     }
 
 
@@ -51,7 +42,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
         final Contact contact = mList.get(position);
 
@@ -60,33 +51,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 FrameLayout.LayoutParams.WRAP_CONTENT
         );
         holder.frameMain.setLayoutParams(flp);
-        if (position % 2 == 0) {
-            holder.frameMain.setBackgroundColor(Color.rgb(255, 255, 255));
-        } else {
-            holder.frameMain.setBackgroundColor(Color.rgb(242, 242, 242));
+        if (position < mList.size()) {
+            holder.frameMain.setBackgroundResource(R.drawable.background_contact_item);
         }
-
-        holder.frameMain.setPadding(0, 5, 0, 5);
-
-
-        Bitmap bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.contact_avatar);
-        flp = new FrameLayout.LayoutParams(
-                (int)(bmp.getWidth() * 0.4),
-                (int)(bmp.getWidth() * 0.4)
-        );
-        flp.gravity = Gravity.CENTER_VERTICAL | Gravity.START;
-        flp.topMargin = 5 * TypedValue.COMPLEX_UNIT_DIP;
-        flp.bottomMargin = 5 * TypedValue.COMPLEX_UNIT_DIP;
-        flp.leftMargin = 10 * TypedValue.COMPLEX_UNIT_DIP;
-        holder.imgContactIcon.setLayoutParams(flp);
-        holder.imgContactIcon.setImageBitmap(bmp);
 
         flp = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT
         );
-        flp.leftMargin = 130 * TypedValue.COMPLEX_UNIT_DIP;
-        flp.rightMargin = 75 * TypedValue.COMPLEX_UNIT_DIP;
         flp.gravity = Gravity.CENTER_VERTICAL;
         holder.frameContactInfo.setLayoutParams(flp);
         holder.frameContactInfo.setOrientation(LinearLayout.VERTICAL);
@@ -96,6 +68,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         holder.txtContactName.setLayoutParams(llp);
+        holder.txtContactName.setPadding(20, 15, 0, 2);
         holder.txtContactName.setText(contact.getName());
         holder.txtContactName.setTextColor(Color.BLACK);
         holder.txtContactName.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
@@ -106,67 +79,37 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         holder.txtContactPhoneNumber.setLayoutParams(llp);
+        holder.txtContactPhoneNumber.setPadding(20, 2, 0, 15);
         holder.txtContactPhoneNumber.setText(contact.getMobilePhone());
-        holder.txtContactPhoneNumber.setTextColor(Color.BLACK);
+        holder.txtContactPhoneNumber.setTextColor(Color.parseColor("#000000"));
         holder.txtContactPhoneNumber.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 
-        bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.call);
         flp = new FrameLayout.LayoutParams(
-                (int)(bmp.getWidth() * 0.8),
-                (int)(bmp.getWidth() * 0.8)
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
         );
         flp.gravity = Gravity.END | Gravity.CENTER_VERTICAL;
-        flp.rightMargin = TypedValue.COMPLEX_UNIT_DIP * 30;
-        holder.btnCall.setLayoutParams(flp);
-        holder.btnCall.setImageBitmap(bmp);
-        holder.btnCall.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onClick(View view) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getMobilePhone()));
-                callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(callIntent);
-            }
-        });
+        flp.rightMargin = 15;
+
+        flp = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        );
+        flp.rightMargin = 15;
+        flp.gravity = Gravity.CENTER_VERTICAL | Gravity.END;
+        holder.txtNetworkName.setLayoutParams(flp);
+        holder.txtNetworkName.setTextColor(Color.parseColor("#a1a1a1"));
+        holder.txtNetworkName.setTextSize(14);
+        String networkName = (type.equals("11-TO-10")) ? ContactPhoneNumberHelper.getNetworkNameByPhoneNumber11(mContext, contact.getMobilePhone())
+                : ContactPhoneNumberHelper.getNetworkNameByPhoneNumber10(mContext, contact.getMobilePhone());
+        holder.txtNetworkName.setText(networkName);
     }
+
+
 
     @Override
     public int getItemCount() {
         return mList.size();
-    }
-
-    public void filter(String text) {
-        mList.clear();
-
-        if (text.trim().equals("")) {
-            this.mList.addAll(this.parentList);
-        } else {
-            for (Contact item : this.parentList) {
-                if (item.getName().toLowerCase().contains(text.toLowerCase())) {
-                    this.mList.add(item);
-                }
-            }
-        }
-        Collections.sort(this.mList, new AlphabetSort());
-        notifyDataSetChanged();
-    }
-
-    public void filterByPhoneNumber(String p) {
-        mList.clear();
-
-        if (p.trim().equals("")) {
-            this.mList.addAll(this.parentList);
-        } else {
-            for (Contact item : this.parentList) {
-                String phoneNumber = ContactPhoneNumberHelper
-                        .formatPhoneNumberWithoutWhiteSpace(item.getMobilePhone());
-                if (phoneNumber.toLowerCase().startsWith(p.toLowerCase())) {
-                    this.mList.add(item);
-                }
-            }
-        }
-        Collections.sort(this.mList, new AlphabetSort());
-        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -175,9 +118,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         LinearLayout frameContactInfo;
         TextView txtContactName;
         TextView txtContactPhoneNumber;
-        ImageView imgContactIcon;
-        ImageView btnCall;
-
+        TextView txtNetworkName;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -185,8 +126,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             frameContactInfo = (LinearLayout) itemView.findViewById(R.id.frame_contact_info);
             txtContactName = (TextView) itemView.findViewById(R.id.contact_name);
             txtContactPhoneNumber = (TextView) itemView.findViewById(R.id.contact_phone_number);
-            imgContactIcon = (ImageView) itemView.findViewById(R.id.contact_icon);
-            btnCall = (ImageView) itemView.findViewById(R.id.btn_call);
+            txtNetworkName = (TextView) itemView.findViewById(R.id.network_name);
         }
     }
 }

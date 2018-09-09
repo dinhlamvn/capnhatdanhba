@@ -6,21 +6,20 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.lcd.vn.capnhatdanhba.R;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Window;
-import android.vn.lcd.activity.ChangeHeadNumberActivity;
-import android.vn.lcd.activity.ListContactActivity;
-import android.vn.lcd.adapter.ContactAdapter;
+import android.vn.lcd.activity.ResultActivity;
 import android.vn.lcd.data.Contact;
 import android.vn.lcd.interfaces.IUpdateContactCallback;
 import android.vn.lcd.sql.ContactHelper;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -31,12 +30,10 @@ public class UpdateStartNumberTask extends AsyncTask<String, Void, HashMap<Strin
     private ProgressDialog mDialog;
     private Context mContext;
     private ArrayList<Contact> mDataList;
-    private IUpdateContactCallback callback;
 
-    public UpdateStartNumberTask(Context context, IUpdateContactCallback callback) {
+    public UpdateStartNumberTask(Context context) {
         this.mContext = context;
         this.mDataList = ContactHelper.getInstance(context).getContactList();
-        this.callback = callback;
     }
 
     @Override
@@ -95,46 +92,22 @@ public class UpdateStartNumberTask extends AsyncTask<String, Void, HashMap<Strin
     @Override
     protected void onPostExecute(HashMap<String, String> hm) {
         super.onPostExecute(hm);
-        if (mDialog.isShowing()) {
-            mDialog.setMessage("Đang load lại dữ liệu...");
-        }
         final int resultTotal = Integer.parseInt(hm.get("TOTAL"));
         final String resultDetails = hm.get("DETAILS");
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
-
                 if (mDialog.isShowing()) {
                     mDialog.dismiss();
                 }
-                callback.updateListContactView();
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
-                        .setTitle("Thông báo")
-                        .setMessage("Đã cập nhật " + resultTotal + " số điện thoại")
-                        .setCancelable(false)
-                        .setPositiveButton("Thoát", null);
-                if (resultTotal > 0) {
-                    builder.setNegativeButton("Xem chi tiết", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Dialog dialog = new Dialog(mContext);
-                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            dialog.setContentView(R.layout.dialog_details_update);
-                            dialog.setCancelable(true);
-                            final TextView txtDetails = (TextView) dialog.findViewById(R.id.txt_details);
-
-                            txtDetails.setText(resultDetails);
-
-                            dialog.show();
-                        }
-
-                    });
-                }
-                AlertDialog alert = builder.create();
-                alert.show();
+                Intent intent = new Intent(mContext, ResultActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("RESULT_TOTAL", resultTotal);
+                bundle.putString("RESULT_VALUE", resultDetails);
+                intent.putExtra("result", bundle);
+                mContext.startActivity(intent);
             }
         }, 1500);
     }

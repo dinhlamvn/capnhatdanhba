@@ -19,6 +19,7 @@ import android.text.Html;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.vn.lcd.data.Contact;
 import android.vn.lcd.interfaces.IViewConstructor;
 import android.vn.lcd.utils.ScreenPreferences;
 import android.widget.Button;
@@ -41,7 +42,6 @@ public class MainActivity extends Activity implements IViewConstructor {
     private final int LOAD_SCREEN_CHANGE_HEAD_NUMBER_AUTO = 1;
     private final int LOAD_SCREEN_RESTORE_HEAD_NUMBER_AUTO = 2;
     private final int LOAD_SCREEN_CHANGE_HEAD_NUMBER_NOT_AUTO = 3;
-    private final int LOAD_SCREEN_HELP = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,37 +89,56 @@ public class MainActivity extends Activity implements IViewConstructor {
     @Override
     public void initLayout() {
 
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
-        LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
+        LinearLayout layout = findViewById(R.id.layout);
 
-        LinearLayout.LayoutParams llp = null;
+        LinearLayout.LayoutParams llp;
 
-        ImageView imgMain = new ImageView(this);
-        llp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        llp.topMargin = 50;
-        llp.gravity = Gravity.CENTER_HORIZONTAL;
-        imgMain.setLayoutParams(llp);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.edit_contact_icon);
-        imgMain.setImageBitmap(bitmap);
-        layout.addView(imgMain);
-
-        Button btnOption1 = new Button(this);
+        TextView txtMessage = new TextView(this);
         llp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        llp.topMargin = 75;
-        llp.leftMargin = 20;
-        llp.rightMargin = 20;
+        txtMessage.setLayoutParams(llp);
+        txtMessage.setBackgroundColor(Color.rgb(255, 255, 255));
+        txtMessage.setTextSize(12);
+        txtMessage.setTextColor(Color.parseColor("#343434"));
+        txtMessage.setPadding(15, 15, 15, 15);
+        txtMessage.setText(getResources().getString(R.string.des_main));
+        txtMessage.setLineSpacing(1.2f, 1.2f);
+        layout.addView(txtMessage);
+
+        ImageView imgMain = new ImageView(this);
+        llp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1
+        );
+        imgMain.setLayoutParams(llp);
+        imgMain.setBackgroundResource(R.drawable.details);
+        layout.addView(imgMain);
+
+
+        LinearLayout btnLayout1 = new LinearLayout(this);
+        llp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        btnLayout1.setLayoutParams(llp);
+        btnLayout1.setOrientation(LinearLayout.HORIZONTAL);
+
+        Button btnOption1 = new Button(this);
+        llp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
+        );
+        llp.leftMargin = 5;
+        llp.rightMargin = 3;
         btnOption1.setLayoutParams(llp);
         btnOption1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
         btnOption1.setTypeface(Typeface.DEFAULT_BOLD);
         btnOption1.setGravity(Gravity.CENTER);
         btnOption1.setText(getResources().getString(R.string.option_1));
-        btnOption1.setAllCaps(true);
         btnOption1.setTextColor(Color.parseColor("#343434"));
         btnOption1.setBackgroundResource(R.drawable.button_selector);
         btnOption1.setOnClickListener(new View.OnClickListener() {
@@ -128,22 +147,21 @@ public class MainActivity extends Activity implements IViewConstructor {
                 loadScreen(LOAD_SCREEN_CHANGE_HEAD_NUMBER_AUTO);
             }
         });
-        layout.addView(btnOption1);
+        btnLayout1.addView(btnOption1);
 
         Button btnOption2 = new Button(this);
         llp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
         );
-        llp.topMargin = 25;
-        llp.leftMargin = 20;
-        llp.rightMargin = 20;
+        llp.rightMargin = 5;
+        llp.leftMargin = 3;
         btnOption2.setLayoutParams(llp);
         btnOption2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
         btnOption2.setTypeface(Typeface.DEFAULT_BOLD);
         btnOption2.setGravity(Gravity.CENTER);
         btnOption2.setText(getResources().getString(R.string.option_2));
-        btnOption2.setAllCaps(true);
         btnOption2.setTextColor(Color.parseColor("#343434"));
         btnOption2.setBackgroundResource(R.drawable.button_selector);
         btnOption2.setOnClickListener(new View.OnClickListener() {
@@ -152,22 +170,23 @@ public class MainActivity extends Activity implements IViewConstructor {
                 loadScreen(LOAD_SCREEN_RESTORE_HEAD_NUMBER_AUTO);
             }
         });
-        layout.addView(btnOption2);
+        btnLayout1.addView(btnOption2);
+
+        layout.addView(btnLayout1);
 
         Button btnOption3 = new Button(this);
         llp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        llp.topMargin = 25;
-        llp.leftMargin = 20;
-        llp.rightMargin = 20;
+        llp.topMargin = 6;
+        llp.leftMargin = 5;
+        llp.rightMargin = 5;
         btnOption3.setLayoutParams(llp);
         btnOption3.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
         btnOption3.setTypeface(Typeface.DEFAULT_BOLD);
         btnOption3.setGravity(Gravity.CENTER);
         btnOption3.setText(getResources().getString(R.string.option_3));
-        btnOption3.setAllCaps(true);
         btnOption3.setTextColor(Color.parseColor("#343434"));
         btnOption3.setBackgroundResource(R.drawable.button_selector);
         btnOption3.setOnClickListener(new View.OnClickListener() {
@@ -178,30 +197,22 @@ public class MainActivity extends Activity implements IViewConstructor {
         });
         layout.addView(btnOption3);
 
-        Button btnOption4 = new Button(this);
+        TextView txtDescription = new TextView(this);
         llp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        llp.topMargin = 25;
-        llp.leftMargin = 20;
-        llp.rightMargin = 20;
-        llp.bottomMargin = 15;
-        btnOption4.setLayoutParams(llp);
-        btnOption4.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
-        btnOption4.setTypeface(Typeface.DEFAULT_BOLD);
-        btnOption4.setGravity(Gravity.CENTER);
-        btnOption4.setText(getResources().getString(R.string.option_4));
-        btnOption4.setAllCaps(true);
-        btnOption4.setTextColor(Color.parseColor("#343434"));
-        btnOption4.setBackgroundResource(R.drawable.button_selector);
-        btnOption4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadScreen(LOAD_SCREEN_HELP);
-            }
-        });
-        layout.addView(btnOption4);
+        llp.leftMargin = 5;
+        llp.rightMargin = 5;
+        llp.bottomMargin = 5;
+        txtDescription.setLayoutParams(llp);
+        txtDescription.setGravity(Gravity.CENTER);
+        txtDescription.setTextSize(13);
+        txtDescription.setTypeface(Typeface.DEFAULT_BOLD);
+        txtDescription.setTextColor(Color.parseColor("#B6B6B6"));
+        txtDescription.setText("Phát triển bởi LCD");
+
+        layout.addView(txtDescription);
     }
 
     @Override
@@ -221,23 +232,18 @@ public class MainActivity extends Activity implements IViewConstructor {
 
     private void loadScreen(int screenIndex) {
 
-        if (screenIndex == LOAD_SCREEN_HELP) {
-
-            Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show();
-
-        } else if (isHasContactPermission()) {
-
+        if (isHasContactPermission()) {
             switch (screenIndex) {
                 case LOAD_SCREEN_CHANGE_HEAD_NUMBER_AUTO: {
-                    loadScreen("CHANGE_HEAD_NUMBER_AUTO");
+                    loadScreen("11-TO-10");
                     break;
                 }
                 case LOAD_SCREEN_RESTORE_HEAD_NUMBER_AUTO: {
-                    loadScreen("CHANGE_HEAD_NUMBER_AUTO");
+                    loadScreen("10-TO-11");
                     break;
                 }
                 case LOAD_SCREEN_CHANGE_HEAD_NUMBER_NOT_AUTO: {
-                    loadScreen("CHANGE_HEAD_NUMBER_NOT_AUTO");
+                    loadScreen("CUSTOM");
                     break;
                 }
             }
@@ -256,13 +262,11 @@ public class MainActivity extends Activity implements IViewConstructor {
         return false;
     }
 
-    private void loadScreen(String screenName) {
-        Intent intent = null;
-        if (screenName.equals("CHANGE_HEAD_NUMBER_AUTO")) {
-            intent = new Intent(MainActivity.this, AutoChangeHeadNumberActivity.class);
-        } else {
-            intent = new Intent(MainActivity.this, ChangeHeadNumberActivity.class);
-        }
+    private void loadScreen(String typeValue) {
+        Intent intent = new Intent(MainActivity.this, ListContactActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("TYPE_VALUE", typeValue);
+        intent.putExtra("DATA", bundle);
         startActivity(intent);
     }
 }

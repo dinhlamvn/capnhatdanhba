@@ -2,6 +2,7 @@ package android.vn.lcd.data;
 
 import android.content.Context;
 import android.lcd.vn.capnhatdanhba.R;
+import android.vn.lcd.utils.ValueFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,16 +20,16 @@ public abstract class ContactPhoneNumberHelper {
 
     public ContactPhoneNumberHelper(Context context) {
         this.mContext = context;
-        networks.put("VIETTLE_OLD", Arrays.asList(context.getResources().getStringArray(R.array.viettels)));
-        networks.put("VIETTLE_NEW", Arrays.asList(context.getResources().getStringArray(R.array.viettels_new)));
-        networks.put("MOBIPHONE_OLD", Arrays.asList(context.getResources().getStringArray(R.array.mobifones)));
-        networks.put("MOBIPHONE_NEW", Arrays.asList(context.getResources().getStringArray(R.array.mobifones_new)));
-        networks.put("VINAPHONE_OLD", Arrays.asList(context.getResources().getStringArray(R.array.vinaphones)));
-        networks.put("VINAPHONE_NEW", Arrays.asList(context.getResources().getStringArray(R.array.vinaphones_new)));
-        networks.put("VIETNAMMOBILE_OLD", Arrays.asList(context.getResources().getStringArray(R.array.vietnammobile)));
-        networks.put("VIETNAMMOBILE_NEW", Arrays.asList(context.getResources().getStringArray(R.array.vietnammobile_new)));
-        networks.put("GMOBILE_OLD", Arrays.asList(context.getResources().getStringArray(R.array.gmobile)));
-        networks.put("GMOBILE_NEW", Arrays.asList(context.getResources().getStringArray(R.array.gmobile_new)));
+        networks.put("VIETTLE_OLD", ValueFactory.getInstance(context).getViettleList());
+        networks.put("VIETTLE_NEW", ValueFactory.getInstance(context).getViettleListNew());
+        networks.put("MOBIPHONE_OLD", ValueFactory.getInstance(context).getMobiList());
+        networks.put("MOBIPHONE_NEW", ValueFactory.getInstance(context).getMobiListNew());
+        networks.put("VINAPHONE_OLD", ValueFactory.getInstance(context).getVinaList());
+        networks.put("VINAPHONE_NEW", ValueFactory.getInstance(context).getVinaListNew());
+        networks.put("VIETNAMMOBILE_OLD", ValueFactory.getInstance(context).getVietnamList());
+        networks.put("VIETNAMMOBILE_NEW", ValueFactory.getInstance(context).getVietnamListNew());
+        networks.put("GMOBILE_OLD", ValueFactory.getInstance(context).getGMobileList());
+        networks.put("GMOBILE_NEW", ValueFactory.getInstance(context).getGMobileListNew());
         dataSets = networks.entrySet();
     }
 
@@ -116,7 +117,7 @@ public abstract class ContactPhoneNumberHelper {
         return phoneNumber;
     }
 
-    private String formatPhoneNumberToStartWithZero(String phoneNumber) {
+    private static String formatPhoneNumberToStartWithZero(String phoneNumber) {
 
         char[] s = phoneNumber.toCharArray();
         StringBuilder pBuilder = new StringBuilder();
@@ -173,5 +174,91 @@ public abstract class ContactPhoneNumberHelper {
 
     public static String changeStartNumberPhone(String phoneNumber, String o, String n) {
         return n + phoneNumber.substring(o.length(), phoneNumber.length());
+    }
+
+    public static String getNetworkNameByPhoneNumber11(Context context, String phoneNumber) {
+
+        String pn = formatPhoneNumberToStartWithZero(phoneNumber);
+        if (pn.length() < 11) return "";
+
+        pn = pn.substring(0, 4);
+
+        if (ValueFactory.getInstance(context).getViettleList().contains(pn)) {
+            return "VIETTLE";
+        }
+
+        if (ValueFactory.getInstance(context).getMobiList().contains(pn)) {
+            return "MOBIPHONE";
+        }
+
+        if (ValueFactory.getInstance(context).getVinaList().contains(pn)) {
+            return "VINAPHONE";
+        }
+
+        if (ValueFactory.getInstance(context).getVietnamList().contains(pn)) {
+            return "VIETNAMOBILE";
+        }
+
+        if (ValueFactory.getInstance(context).getGMobileList().contains(pn)) {
+            return "GMOBILE";
+        }
+        return "";
+    }
+
+    public static String getNetworkNameByPhoneNumber10(Context context, String phoneNumber) {
+
+        String pn = formatPhoneNumberToStartWithZero(phoneNumber);
+        if (pn.length() != 10) return "";
+
+        pn = pn.substring(0, 3);
+
+        if (ValueFactory.getInstance(context).getViettleListNew().contains(pn)) {
+            return "VIETTLE";
+        }
+
+        if (ValueFactory.getInstance(context).getMobiListNew().contains(pn)) {
+            return "MOBIPHONE";
+        }
+
+        if (ValueFactory.getInstance(context).getVinaListNew().contains(pn)) {
+            return "VINAPHONE";
+        }
+
+        if (ValueFactory.getInstance(context).getVietnamListNew().contains(pn)) {
+            return "VIETNAMOBILE";
+        }
+
+        if (ValueFactory.getInstance(context).getGMobileListNew().contains(pn)) {
+            return "GMOBILE";
+        }
+        return "";
+    }
+
+    public static boolean isPhoneNumber11(Context context, String phoneNumber) {
+
+        String pn = formatPhoneNumberToStartWithZero(phoneNumber);
+        if (pn.length() < 11) return false;
+
+        pn = pn.substring(0, 4);
+
+        return ValueFactory.getInstance(context).getViettleList().contains(pn)
+                || ValueFactory.getInstance(context).getMobiList().contains(pn)
+                || ValueFactory.getInstance(context).getVinaList().contains(pn)
+                || ValueFactory.getInstance(context).getVietnamList().contains(pn)
+                || ValueFactory.getInstance(context).getGMobileList().contains(pn);
+    }
+
+    public static boolean isPhoneNumber10(Context context, String phoneNumber) {
+        String pn = formatPhoneNumberToStartWithZero(phoneNumber);
+
+        if (pn.length() != 10) return false;
+
+        pn = pn.substring(0, 3);
+
+        return ValueFactory.getInstance(context).getViettleListNew().contains(pn)
+                || ValueFactory.getInstance(context).getMobiListNew().contains(pn)
+                || ValueFactory.getInstance(context).getVinaListNew().contains(pn)
+                || ValueFactory.getInstance(context).getVietnamListNew().contains(pn)
+                || ValueFactory.getInstance(context).getGMobileListNew().contains(pn);
     }
 }

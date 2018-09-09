@@ -3,20 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="android.vn.lcd.activity.MainActivity" android:background="#fff">
+    tools:context="android.vn.lcd.activity.MainActivity">
 
-    <ScrollView
-        android:id="@+id/scroll_view"
+    <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-        </LinearLayout>
-
-    </ScrollView>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    </LinearLayout>
 
 </FrameLayout>
