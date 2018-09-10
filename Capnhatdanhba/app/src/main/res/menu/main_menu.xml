@@ -14,7 +14,7 @@
 
         <item android:id="@+id/select_vietnam" android:title="Vietnamobile" />
 
-        <item android:id="@+id/select_gmobile" android:title="GMobilen" />
+        <item android:id="@+id/select_gmobile" android:title="GMobile" />
 
     </group>
 

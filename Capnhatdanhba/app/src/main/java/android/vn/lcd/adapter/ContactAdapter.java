@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.vn.lcd.data.Contact;
 import android.vn.lcd.data.ContactPhoneNumberHelper;
+import android.vn.lcd.utils.ValueFactory;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -59,6 +60,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT
         );
+        flp.leftMargin = (int)(ValueFactory.getScreenWidth() * 0.02f);
         flp.gravity = Gravity.CENTER_VERTICAL;
         holder.frameContactInfo.setLayoutParams(flp);
         holder.frameContactInfo.setOrientation(LinearLayout.VERTICAL);
@@ -88,24 +90,18 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT
         );
-        flp.gravity = Gravity.END | Gravity.CENTER_VERTICAL;
-        flp.rightMargin = 15;
-
-        flp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
-        );
-        flp.rightMargin = 15;
+        flp.rightMargin = (int)(ValueFactory.getScreenWidth() * 0.02f);
         flp.gravity = Gravity.CENTER_VERTICAL | Gravity.END;
         holder.txtNetworkName.setLayoutParams(flp);
         holder.txtNetworkName.setTextColor(Color.parseColor("#a1a1a1"));
         holder.txtNetworkName.setTextSize(14);
-        String networkName = (type.equals("11-TO-10")) ? ContactPhoneNumberHelper.getNetworkNameByPhoneNumber11(mContext, contact.getMobilePhone())
-                : ContactPhoneNumberHelper.getNetworkNameByPhoneNumber10(mContext, contact.getMobilePhone());
+        String networkName = "";
+        if (!type.equals("CUSTOM")) {
+            networkName = (type.equals("11-TO-10")) ? ContactPhoneNumberHelper.getNetworkNameByPhoneNumber11(mContext, contact.getMobilePhone())
+                    : ContactPhoneNumberHelper.getNetworkNameByPhoneNumber10(mContext, contact.getMobilePhone());
+        }
         holder.txtNetworkName.setText(networkName);
     }
-
-
 
     @Override
     public int getItemCount() {

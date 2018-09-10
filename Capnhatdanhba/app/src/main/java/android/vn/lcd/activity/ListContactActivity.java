@@ -31,6 +31,7 @@ import android.vn.lcd.adapter.ContactAdapter;
 import android.vn.lcd.sql.ContactHelper;
 import android.vn.lcd.utils.UpdateContactTask;
 import android.vn.lcd.utils.UpdateStartNumberTask;
+import android.vn.lcd.utils.ValueFactory;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -58,8 +59,6 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_list_contact);
 
-        initAndShowDialog();
-
         initParams();
 
         loadData();
@@ -71,17 +70,15 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
         setUpTitle();
 
         setUpSubTitleActionBar(mUpdateList.size());
-
-        hideDialog();
     }
 
     private void setUpTitle() {
         switch (typeValue) {
             case "11-TO-10":
-                setUpTitleActionBar("Đổi " + getResources().getString(R.string.option_1));
+                setUpTitleActionBar(getResources().getString(R.string.option_1));
                 break;
             case "10-TO-11":
-                setUpTitleActionBar("Đổi " + getResources().getString(R.string.option_2));
+                setUpTitleActionBar(getResources().getString(R.string.option_2));
                 break;
             case "CUSTOM":
                 setUpTitleActionBar(getResources().getString(R.string.option_3));
@@ -171,6 +168,7 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
     public void initLayout() {
 
         LinearLayout layout = findViewById(R.id.layout);
+        layout.setBackgroundColor(Color.rgb(255, 255, 255));
 
         LinearLayout.LayoutParams llp;
 
@@ -188,7 +186,6 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
             edtOldPhoneNumber.setHint(getResources().getString(R.string.edt_start_number_hint));
             edtOldPhoneNumber.setTextSize(14f);
             edtOldPhoneNumber.setTextColor(Color.rgb(34,34,34));
-            edtOldPhoneNumber.setHintTextColor(Color.rgb(198, 198, 198));
             edtOldPhoneNumber.setInputType(InputType.TYPE_CLASS_PHONE);
             edtOldPhoneNumber.setBackgroundResource(android.R.drawable.edit_text);
             edtOldPhoneNumber.addTextChangedListener(new TextWatcher() {
@@ -222,7 +219,6 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
             edtNewPhoneNumber.setHint(getResources().getString(R.string.edt_replace_start_number_hint));
             edtNewPhoneNumber.setTextSize(14f);
             edtNewPhoneNumber.setTextColor(Color.rgb(34,34,34));
-            edtNewPhoneNumber.setHintTextColor(Color.rgb(198, 198, 198));
             edtNewPhoneNumber.setInputType(InputType.TYPE_CLASS_PHONE);
             edtNewPhoneNumber.setBackgroundResource(android.R.drawable.edit_text);
             layout.addView(edtNewPhoneNumber);
@@ -242,7 +238,6 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
                 FrameLayout.LayoutParams.MATCH_PARENT
         );
         mRecycleView.setLayoutParams(flp);
-        mRecycleView.setBackgroundColor(Color.parseColor("#ffffff"));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecycleView.setLayoutManager(mLayoutManager);
         mRecycleView.setAdapter(mAdapter);
@@ -255,8 +250,8 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
                 (int)(bitmap.getHeight() * 0.51)
         );
         flp.gravity = Gravity.BOTTOM | Gravity.END;
-        flp.rightMargin = 25;
-        flp.bottomMargin = 80;
+        flp.rightMargin = (int)(ValueFactory.getScreenWidth() * 0.025);
+        flp.bottomMargin = (int)(ValueFactory.getScreenWidth() * 0.11);
         btnSync.setLayoutParams(flp);
         btnSync.setImageBitmap(bitmap);
         btnSync.setOnClickListener(new View.OnClickListener() {
@@ -300,14 +295,18 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
                             .setPositiveButton(btnYes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    if (typeValue.equals("11-TO-10")) {
-                                        new UpdateContactTask(ListContactActivity.this, mUpdateList).execute(true);
-                                    } else if (typeValue.equals("10-TO-11")){
-                                        new UpdateContactTask(ListContactActivity.this, mUpdateList).execute(false);
-                                    } else if (typeValue.equals("CUSTOM")) {
-                                        String a = edtOldPhoneNumber.getText().toString();
-                                        String b = edtNewPhoneNumber.getText().toString();
-                                        new UpdateStartNumberTask(ListContactActivity.this).execute(a,b);
+                                    switch (typeValue) {
+                                        case "11-TO-10":
+                                            new UpdateContactTask(ListContactActivity.this, mUpdateList).execute(true);
+                                            break;
+                                        case "10-TO-11":
+                                            new UpdateContactTask(ListContactActivity.this, mUpdateList).execute(false);
+                                            break;
+                                        case "CUSTOM":
+                                            String a = edtOldPhoneNumber.getText().toString();
+                                            String b = edtNewPhoneNumber.getText().toString();
+                                            new UpdateStartNumberTask(ListContactActivity.this).execute(a, b);
+                                            break;
                                     }
                                 }
                             })
@@ -381,20 +380,5 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
         }
         mAdapter.notifyDataSetChanged();
         setUpSubTitleActionBar(mUpdateList.size());
-    }
-
-    private void initAndShowDialog() {
-        mDialog = new ProgressDialog(this);
-        mDialog.setTitle(null);
-        mDialog.setMessage("Đang tải dữ liệu");
-        mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mDialog.setCancelable(false);
-        mDialog.show();
-    }
-
-    private void hideDialog() {
-        if (mDialog != null && mDialog.isShowing()) {
-            mDialog.dismiss();
-        }
     }
 }

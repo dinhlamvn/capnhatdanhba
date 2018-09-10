@@ -22,6 +22,7 @@ import android.view.View;
 import android.vn.lcd.data.Contact;
 import android.vn.lcd.interfaces.IViewConstructor;
 import android.vn.lcd.utils.ScreenPreferences;
+import android.vn.lcd.utils.ValueFactory;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,47 +32,42 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements IViewConstructor {
 
-
-    Button btnLoadContact;
-
-    private View.OnClickListener listener1, listener2;
-
-    private final int MY_REQUEST_PERMISSION_READ_CONTACT = 1111;
-    private boolean isFirstRunApp = false;
+    private final int MY_REQUEST_PERMISSION_CONTACT = 1111;
 
     private final int LOAD_SCREEN_CHANGE_HEAD_NUMBER_AUTO = 1;
     private final int LOAD_SCREEN_RESTORE_HEAD_NUMBER_AUTO = 2;
     private final int LOAD_SCREEN_CHANGE_HEAD_NUMBER_NOT_AUTO = 3;
 
+    private int SCREEN_TO_LOAD = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //initParams();
-        //startApp();
+        initParams();
         initLayout();
     }
 
-    private void startApp() {
-        if (isFirstRunApp) {
-            initLayout();
-            initListener();
-        } else {
-            loadScreenContactList();
-        }
-    }
-
-    private void loadScreenContactList() {
-
-
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == MY_REQUEST_PERMISSION_READ_CONTACT) {
+        if (requestCode == MY_REQUEST_PERMISSION_CONTACT) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                switch (SCREEN_TO_LOAD) {
+                    case LOAD_SCREEN_CHANGE_HEAD_NUMBER_AUTO: {
+                        loadScreen("11-TO-10");
+                        break;
+                    }
+                    case LOAD_SCREEN_RESTORE_HEAD_NUMBER_AUTO: {
+                        loadScreen("10-TO-11");
+                        break;
+                    }
+                    case LOAD_SCREEN_CHANGE_HEAD_NUMBER_NOT_AUTO: {
+                        loadScreen("CUSTOM");
+                        break;
+                    }
+                }
             } else {
                 // DO NO THING
             }
@@ -82,8 +78,7 @@ public class MainActivity extends Activity implements IViewConstructor {
 
     @Override
     public void initParams() {
-        isFirstRunApp = ScreenPreferences.getInstance(getApplicationContext())
-                .getFirstRunApp();
+
     }
 
     @Override
@@ -132,8 +127,8 @@ public class MainActivity extends Activity implements IViewConstructor {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 1
         );
-        llp.leftMargin = 5;
-        llp.rightMargin = 3;
+        llp.leftMargin = (int)(ValueFactory.getScreenWidth() * 0.01);
+        llp.rightMargin = (int)(ValueFactory.getScreenWidth() * 0.008);
         btnOption1.setLayoutParams(llp);
         btnOption1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
         btnOption1.setTypeface(Typeface.DEFAULT_BOLD);
@@ -155,8 +150,8 @@ public class MainActivity extends Activity implements IViewConstructor {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 1
         );
-        llp.rightMargin = 5;
-        llp.leftMargin = 3;
+        llp.rightMargin = (int)(ValueFactory.getScreenWidth() * 0.01);
+        llp.leftMargin = (int)(ValueFactory.getScreenWidth() * 0.008);
         btnOption2.setLayoutParams(llp);
         btnOption2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
         btnOption2.setTypeface(Typeface.DEFAULT_BOLD);
@@ -179,9 +174,9 @@ public class MainActivity extends Activity implements IViewConstructor {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        llp.topMargin = 6;
-        llp.leftMargin = 5;
-        llp.rightMargin = 5;
+        llp.topMargin = (int)(ValueFactory.getScreenWidth() * 0.018);
+        llp.leftMargin = (int)(ValueFactory.getScreenWidth() * 0.01);
+        llp.rightMargin = (int)(ValueFactory.getScreenWidth() * 0.01);
         btnOption3.setLayoutParams(llp);
         btnOption3.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
         btnOption3.setTypeface(Typeface.DEFAULT_BOLD);
@@ -202,27 +197,22 @@ public class MainActivity extends Activity implements IViewConstructor {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        llp.leftMargin = 5;
-        llp.rightMargin = 5;
-        llp.bottomMargin = 5;
+        llp.leftMargin = (int)(ValueFactory.getScreenWidth() * 0.01);
+        llp.rightMargin = (int)(ValueFactory.getScreenWidth() * 0.01);
+        llp.bottomMargin = (int)(ValueFactory.getScreenWidth() * 0.01);
         txtDescription.setLayoutParams(llp);
         txtDescription.setGravity(Gravity.CENTER);
         txtDescription.setTextSize(13);
         txtDescription.setTypeface(Typeface.DEFAULT_BOLD);
         txtDescription.setTextColor(Color.parseColor("#B6B6B6"));
-        txtDescription.setText("Phát triển bởi LCD");
+        txtDescription.setText(getResources().getString(R.string.text_develop_by));
 
         layout.addView(txtDescription);
     }
 
     @Override
     public void initListener() {
-        btnLoadContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadScreenContactList();
-            }
-        });
+
     }
 
     @Override
@@ -231,7 +221,7 @@ public class MainActivity extends Activity implements IViewConstructor {
     }
 
     private void loadScreen(int screenIndex) {
-
+        SCREEN_TO_LOAD = screenIndex;
         if (isHasContactPermission()) {
             switch (screenIndex) {
                 case LOAD_SCREEN_CHANGE_HEAD_NUMBER_AUTO: {
@@ -256,8 +246,8 @@ public class MainActivity extends Activity implements IViewConstructor {
             return true;
         } else {
             ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.READ_CONTACTS},
-                    MY_REQUEST_PERMISSION_READ_CONTACT);
+                    new String[] {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS},
+                    MY_REQUEST_PERMISSION_CONTACT);
         }
         return false;
     }
@@ -269,4 +259,5 @@ public class MainActivity extends Activity implements IViewConstructor {
         intent.putExtra("DATA", bundle);
         startActivity(intent);
     }
+
 }

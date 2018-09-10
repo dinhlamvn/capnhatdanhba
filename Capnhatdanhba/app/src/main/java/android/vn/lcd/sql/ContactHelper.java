@@ -1,16 +1,18 @@
 package android.vn.lcd.sql;
 
+import android.Manifest;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
 import android.vn.lcd.data.Contact;
 import android.vn.lcd.data.ContactPhoneNumberHelper;
+import android.vn.lcd.interfaces.IContactHelper;
 import android.vn.lcd.utils.AlphabetSort;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class ContactHelper extends ContactPhoneNumberHelper implements ContactHelperInterface {
+public class ContactHelper extends ContactPhoneNumberHelper implements IContactHelper {
 
     private Context mContext;
 
@@ -357,7 +359,11 @@ public class ContactHelper extends ContactPhoneNumberHelper implements ContactHe
                 .withValue(ContactsContract.CommonDataKinds.Phone.DATA, newPhone)
                 .build());
         try {
-            return mContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops).length;
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_CONTACTS)
+                    == PackageManager.PERMISSION_GRANTED) {
+                return mContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops).length;
+            }
+            return 0;
         } catch (RemoteException ex) {
             return 0;
         } catch (OperationApplicationException e) {

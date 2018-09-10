@@ -1,6 +1,7 @@
 package android.vn.lcd.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.lcd.vn.capnhatdanhba.R;
 
 import java.util.Arrays;
@@ -20,6 +21,14 @@ public class ValueFactory {
             instance = new ValueFactory(context);
         }
         return instance;
+    }
+
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 
     public List<String> getViettleList() {

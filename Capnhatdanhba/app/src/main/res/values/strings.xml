@@ -1,50 +1,36 @@
 <resources>
-    <string name="app_name">Cập nhật danh bạ</string>
+    <string name="app_name">Đổi đầu số danh bạ</string>
 
     <!--Button text-->
-    <string name="btn_load_contact_text">BẮT ĐẦU</string>
-    <string name="btn_auto_sync">ĐỒNG BỘ</string>
-    <string name="btn_auto_restore">PHỤC HỒI</string>
-    <string name="btn_handmade_sycn">THỰC HIỆN</string>
     <string name="btn_yes">Đồng ý</string>
     <string name="btn_cancel">Hủy bỏ</string>
-    <string name="btn_textview_details"><u>Xem chi tiết</u></string>
 
     <!--Dialog text-->
     <string name="confirm_title">Xác nhận</string>
-    <string name="confirm_text">Bạn muốn thực hiện?</string>
     <string name="do_empty_list">Không có số nào để chuyển</string>
+    <string name="info_app">
+        Tên: xxxx
+        \nPhiên bản: yyyy
+        \nPhát triển bởi: Adomino
+        \nEmail: adomino9718@gmail.com
+    </string>
 
-    <!--Radio text-->
-    <string name="rdb_update">Cập nhật</string>
-    <string name="rdb_restore">Phục hồi</string>
-
-    <!--Menu item text-->
-    <string name="item1">Đổi đầu số</string>
-    <string name="item2">Đổi đầu số cho trước</string>
-    <string name="item3">About</string>
 
     <!--Edit text hint-->
     <string name="edt_start_number_hint">Đầu số cẩn đổi</string>
     <string name="edt_replace_start_number_hint">Đầu số muốn đổi sang</string>
 
-
-    <!--Image view description-->
-    <string name="des_contact_icon">Icon avatar of contact</string>
-    <string name="opt_contact">Option of contact</string>
-
     <!--Text view text-->
-    <string name="des_sync">Dữ liệu số điện thoại danh bạ sẽ được cập nhật hoặc phục hồi theo quy định mới. Bạn muốn?</string>
-    <string name="des_sync_handmade">Dữ liệu số điện thoại danh bạ sẽ được cập nhật từ đầu số cũ trở thành đầu số mới.</string>
     <string name="des_main">
         Từ ngày 15/09/2018 các thuê bao 11 số của các nhà mạng Viettle, MobiFone, VinaPhone, Vietnamobile và GMobile sẽ
         chuyển về 10 số.
         \n<b>Chi tiết chuyển đổi như sau:</b>
     </string>
-    <string name="option_1">11 số sang 10 số</string>
-    <string name="option_2">10 số sang 11 số</string>
+    <string name="option_1">Đổi 11 số sang 10 số</string>
+    <string name="option_2">Đổi 10 số sang 11 số</string>
     <string name="option_3"><u>Đổi đầu số tự chọn</u></string>
-    <string name="option_4"><u>Giúp đỡ</u></string>
+    <string name="text_descript">⇨</string>
+    <string name="text_develop_by">Phát triển bởi Adomino</string>
 
 
     <!--Phone number start phone array-->
