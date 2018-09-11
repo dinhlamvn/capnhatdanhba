@@ -133,8 +133,43 @@ public class ContactHelper extends ContactPhoneNumberHelper implements IContactH
     public void filterList11() {
         ArrayList<Contact> list = new ArrayList<>();
         for (Contact contact : contacts) {
-            if (ContactPhoneNumberHelper.isPhoneNumber11(mContext, contact.getMobilePhone())) {
-                list.add(contact);
+
+            Contact contact1 = new Contact();
+
+            contact1.setId(contact.getId());
+            contact1.setName(contact.getName());
+            contact1.setHasPhone(contact.isHasPhone());
+            contact1.setHomePhone(contact.getHomePhone());
+            contact1.setMobilePhone(contact.getMobilePhone());
+            contact1.setWorkPhone(contact.getWorkPhone());
+
+            String a = contact1.getHomePhone();
+            String b = contact1.getMobilePhone();
+            String c = contact1.getWorkPhone();
+
+            boolean isAddHome = false;
+            boolean isAddMobile = false;
+            boolean isAddWork = false;
+
+            isAddHome = ContactPhoneNumberHelper.isPhoneNumber11(mContext, a);
+            isAddMobile = ContactPhoneNumberHelper.isPhoneNumber11(mContext, b);
+            isAddWork = ContactPhoneNumberHelper.isPhoneNumber11(mContext, c);
+
+            if (!isAddHome) {
+                contact1.setHomePhone("");
+            }
+
+            if (!isAddMobile) {
+                contact1.setMobilePhone("");
+            }
+
+            if (!isAddWork) {
+                contact1.setWorkPhone("");
+            }
+
+
+            if (isAddHome || isAddMobile || isAddWork) {
+                list.add(contact1);
             }
         }
         contacts.clear();
@@ -144,8 +179,42 @@ public class ContactHelper extends ContactPhoneNumberHelper implements IContactH
     public void filterList10() {
         ArrayList<Contact> list = new ArrayList<>();
         for (Contact contact : contacts) {
-            if (ContactPhoneNumberHelper.isPhoneNumber10(mContext, contact.getMobilePhone())) {
-                list.add(contact);
+            Contact contact1 = new Contact();
+
+            contact1.setId(contact.getId());
+            contact1.setName(contact.getName());
+            contact1.setHasPhone(contact.isHasPhone());
+            contact1.setHomePhone(contact.getHomePhone());
+            contact1.setMobilePhone(contact.getMobilePhone());
+            contact1.setWorkPhone(contact.getWorkPhone());
+
+            String a = contact1.getHomePhone();
+            String b = contact1.getMobilePhone();
+            String c = contact1.getWorkPhone();
+
+            boolean isAddHome = false;
+            boolean isAddMobile = false;
+            boolean isAddWork = false;
+
+            isAddHome = ContactPhoneNumberHelper.isPhoneNumber10(mContext, a);
+            isAddMobile = ContactPhoneNumberHelper.isPhoneNumber10(mContext, b);
+            isAddWork = ContactPhoneNumberHelper.isPhoneNumber10(mContext, c);
+
+            if (!isAddHome) {
+                contact1.setHomePhone("");
+            }
+
+            if (!isAddMobile) {
+                contact1.setMobilePhone("");
+            }
+
+            if (!isAddWork) {
+                contact1.setWorkPhone("");
+            }
+
+
+            if (isAddHome || isAddMobile || isAddWork) {
+                list.add(contact1);
             }
         }
         contacts.clear();
@@ -155,9 +224,11 @@ public class ContactHelper extends ContactPhoneNumberHelper implements IContactH
     public void filterListCustom() {
         ArrayList<Contact> list = new ArrayList<>();
         for (Contact contact : contacts) {
-            if (!contact.getMobilePhone().equals("")
-                    || !contact.getWorkPhone().equals("")
-                    || !contact.getHomePhone().equals("")) {
+            String a = contact.getHomePhone();
+            String b = contact.getMobilePhone();
+            String c = contact.getWorkPhone();
+
+            if ((a.length() >= 10 || b.length() >= 10 || c.length() >= 10)) {
                 list.add(contact);
             }
         }

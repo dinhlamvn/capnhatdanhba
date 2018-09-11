@@ -17,7 +17,7 @@
 
 
     <!--Edit text hint-->
-    <string name="edt_start_number_hint">Đầu số cẩn đổi</string>
+    <string name="edt_start_number_hint">Đầu số cần đổi</string>
     <string name="edt_replace_start_number_hint">Đầu số muốn đổi sang</string>
 
     <!--Text view text-->
@@ -28,7 +28,7 @@
     </string>
     <string name="option_1">Đổi 11 số sang 10 số</string>
     <string name="option_2">Đổi 10 số sang 11 số</string>
-    <string name="option_3"><u>Đổi đầu số tự chọn</u></string>
+    <string name="option_3"><u>Đổi đầu số</u></string>
     <string name="text_descript">⇨</string>
     <string name="text_develop_by">Phát triển bởi Adomino</string>
 

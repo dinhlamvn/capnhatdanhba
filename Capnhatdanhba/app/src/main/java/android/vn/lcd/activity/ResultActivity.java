@@ -277,42 +277,164 @@ public class ResultActivity extends AppCompatActivity implements IViewConstructo
             holder.txtContactName.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
             holder.txtContactName.setTypeface(Typeface.DEFAULT_BOLD);
 
-            llp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            holder.framePhoneInfo.setLayoutParams(llp);
-            holder.framePhoneInfo.setOrientation(LinearLayout.HORIZONTAL);
+            if (!data.getOldHomeNumber().equals("") && !data.getNewHomeNumber().equals("")) {
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.frameHome.setLayoutParams(llp);
+                holder.frameHome.setOrientation(LinearLayout.HORIZONTAL);
 
-            llp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            holder.txtOldPhoneNumber.setLayoutParams(llp);
-            holder.txtOldPhoneNumber.setPadding(20, 2, 0, 15);
-            holder.txtOldPhoneNumber.setText(data.getOldPhoneNumber());
-            holder.txtOldPhoneNumber.setTextColor(Color.rgb(255, 0, 0));
-            holder.txtOldPhoneNumber.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtTypeHome.setLayoutParams(llp);
+                holder.txtTypeHome.setPadding(20, 2, 0, 15);
+                holder.txtTypeHome.setText("Home:");
+                holder.txtTypeHome.setTextColor(Color.rgb(80, 80, 80));
+                holder.txtTypeHome.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 
-            llp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            holder.txtDescription.setLayoutParams(llp);
-            holder.txtDescription.setPadding(20, 2, 0, 15);
-            holder.txtDescription.setText(mContext.getResources().getString(R.string.text_descript));
-            holder.txtDescription.setTextColor(Color.rgb(0, 0, 0));
-            holder.txtDescription.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtOldPhoneHome.setLayoutParams(llp);
+                holder.txtOldPhoneHome.setPadding(20, 2, 0, 15);
+                holder.txtOldPhoneHome.setText(data.getOldHomeNumber());
+                holder.txtOldPhoneHome.setTextColor(Color.rgb(255, 0, 0));
+                holder.txtOldPhoneHome.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 
-            llp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            holder.txtNewPhoneNumber.setLayoutParams(llp);
-            holder.txtNewPhoneNumber.setPadding(20, 2, 0, 15);
-            holder.txtNewPhoneNumber.setText(data.getNewPhoneNumber());
-            holder.txtNewPhoneNumber.setTextColor(Color.rgb(0, 0, 255));
-            holder.txtNewPhoneNumber.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtDes1.setLayoutParams(llp);
+                holder.txtDes1.setPadding(20, 2, 0, 15);
+                holder.txtDes1.setText(mContext.getResources().getString(R.string.text_descript));
+                holder.txtDes1.setTextColor(Color.rgb(0, 0, 0));
+                holder.txtDes1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtNewPhoneHome.setLayoutParams(llp);
+                holder.txtNewPhoneHome.setPadding(20, 2, 0, 15);
+                holder.txtNewPhoneHome.setText(data.getNewHomeNumber());
+                holder.txtNewPhoneHome.setTextColor(Color.rgb(0, 0, 255));
+                holder.txtNewPhoneHome.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+
+                holder.frameHome.setVisibility(View.VISIBLE);
+            } else {
+                holder.frameHome.setVisibility(View.GONE);
+            }
+
+            if (!data.getOldPhoneNumber().equals("") && !data.getNewPhoneNumber().equals("")) {
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.frameMobile.setLayoutParams(llp);
+                holder.frameMobile.setOrientation(LinearLayout.HORIZONTAL);
+
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtTypeMobile.setLayoutParams(llp);
+                holder.txtTypeMobile.setPadding(20, 2, 0, 15);
+                holder.txtTypeMobile.setText("Mobile:");
+                holder.txtTypeMobile.setTextColor(Color.rgb(80, 80, 80));
+                holder.txtTypeMobile.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtOldPhoneMobile.setLayoutParams(llp);
+                holder.txtOldPhoneMobile.setPadding(20, 2, 0, 15);
+                holder.txtOldPhoneMobile.setText(data.getOldPhoneNumber());
+                holder.txtOldPhoneMobile.setTextColor(Color.rgb(255, 0, 0));
+                holder.txtOldPhoneMobile.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtDes2.setLayoutParams(llp);
+                holder.txtDes2.setPadding(20, 2, 0, 15);
+                holder.txtDes2.setText(mContext.getResources().getString(R.string.text_descript));
+                holder.txtDes2.setTextColor(Color.rgb(0, 0, 0));
+                holder.txtDes2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtNewPhoneMobile.setLayoutParams(llp);
+                holder.txtNewPhoneMobile.setPadding(20, 2, 0, 15);
+                holder.txtNewPhoneMobile.setText(data.getNewPhoneNumber());
+                holder.txtNewPhoneMobile.setTextColor(Color.rgb(0, 0, 255));
+                holder.txtNewPhoneMobile.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+
+                holder.frameMobile.setVisibility(View.VISIBLE);
+            } else {
+                holder.frameMobile.setVisibility(View.GONE);
+            }
+
+            if (!data.getOldWorkNumber().equals("") && !data.getNewWorkNumber().equals("")) {
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.frameWork.setLayoutParams(llp);
+                holder.frameWork.setOrientation(LinearLayout.HORIZONTAL);
+
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtTypeWork.setLayoutParams(llp);
+                holder.txtTypeWork.setPadding(20, 2, 0, 15);
+                holder.txtTypeWork.setText("Work:");
+                holder.txtTypeWork.setTextColor(Color.rgb(80, 80, 80));
+                holder.txtTypeWork.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtOldPhoneWork.setLayoutParams(llp);
+                holder.txtOldPhoneWork.setPadding(20, 2, 0, 15);
+                holder.txtOldPhoneWork.setText(data.getOldWorkNumber());
+                holder.txtOldPhoneWork.setTextColor(Color.rgb(255, 0, 0));
+                holder.txtOldPhoneWork.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtDes3.setLayoutParams(llp);
+                holder.txtDes3.setPadding(20, 2, 0, 15);
+                holder.txtDes3.setText(mContext.getResources().getString(R.string.text_descript));
+                holder.txtDes3.setTextColor(Color.rgb(0, 0, 0));
+                holder.txtDes3.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+
+                llp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                holder.txtNewPhoneWork.setLayoutParams(llp);
+                holder.txtNewPhoneWork.setPadding(20, 2, 0, 15);
+                holder.txtNewPhoneWork.setText(data.getNewWorkNumber());
+                holder.txtNewPhoneWork.setTextColor(Color.rgb(0, 0, 255));
+                holder.txtNewPhoneWork.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+
+                holder.frameWork.setVisibility(View.VISIBLE);
+            } else {
+                holder.frameWork.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -325,10 +447,21 @@ public class ResultActivity extends AppCompatActivity implements IViewConstructo
             FrameLayout frameMain;
             LinearLayout frameInfo;
             TextView txtContactName;
-            LinearLayout framePhoneInfo;
-            TextView txtOldPhoneNumber;
-            TextView txtDescription;
-            TextView txtNewPhoneNumber;
+            LinearLayout frameHome;
+            LinearLayout frameMobile;
+            LinearLayout frameWork;
+            TextView txtTypeHome;
+            TextView txtOldPhoneHome;
+            TextView txtDes1;
+            TextView txtNewPhoneHome;
+            TextView txtTypeMobile;
+            TextView txtOldPhoneMobile;
+            TextView txtDes2;
+            TextView txtNewPhoneMobile;
+            TextView txtTypeWork;
+            TextView txtOldPhoneWork;
+            TextView txtDes3;
+            TextView txtNewPhoneWork;
 
 
             ViewHolder(View itemView) {
@@ -336,10 +469,26 @@ public class ResultActivity extends AppCompatActivity implements IViewConstructo
                 frameMain = (FrameLayout) itemView.findViewById(R.id.frameMain);
                 frameInfo = (LinearLayout) itemView.findViewById(R.id.frameInfo);
                 txtContactName = (TextView) itemView.findViewById(R.id.txtContactName);
-                framePhoneInfo = (LinearLayout) itemView.findViewById(R.id.framePhone);
-                txtOldPhoneNumber = (TextView) itemView.findViewById(R.id.txtOldPhoneNumber);
-                txtDescription = (TextView) itemView.findViewById(R.id.txtDescription);
-                txtNewPhoneNumber = (TextView) itemView.findViewById(R.id.txtNewPhoneNumber);
+
+                frameHome = (LinearLayout) itemView.findViewById(R.id.framePhoneHome);
+                frameMobile = (LinearLayout) itemView.findViewById(R.id.framePhoneMobile);
+                frameWork = (LinearLayout) itemView.findViewById(R.id.framePhoneWork);
+
+                txtTypeHome = (TextView) itemView.findViewById(R.id.txtTypeHome);
+                txtOldPhoneHome = (TextView) itemView.findViewById(R.id.txtOldPhoneHome);
+                txtDes1 = (TextView) itemView.findViewById(R.id.txtDescription1);
+                txtNewPhoneHome = (TextView) itemView.findViewById(R.id.txtNewPhoneHome);
+
+                txtTypeMobile = (TextView) itemView.findViewById(R.id.txtTypeMobile);
+                txtOldPhoneMobile = (TextView) itemView.findViewById(R.id.txtOldPhoneMobile);
+                txtDes2 = (TextView) itemView.findViewById(R.id.txtDescription2);
+                txtNewPhoneMobile = (TextView) itemView.findViewById(R.id.txtNewPhoneMobile);
+
+                txtTypeWork = (TextView) itemView.findViewById(R.id.txtTypeWork);
+                txtOldPhoneWork = (TextView) itemView.findViewById(R.id.txtOldPhoneWork);
+                txtDes3 = (TextView) itemView.findViewById(R.id.txtDescription3);
+                txtNewPhoneWork = (TextView) itemView.findViewById(R.id.txtNewPhoneWork);
+
             }
         }
     }

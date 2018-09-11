@@ -76,31 +76,67 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         holder.txtContactName.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
         holder.txtContactName.setTypeface(Typeface.DEFAULT_BOLD);
 
-        llp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        holder.txtContactPhoneNumber.setLayoutParams(llp);
-        holder.txtContactPhoneNumber.setPadding(20, 2, 0, 15);
-        holder.txtContactPhoneNumber.setText(contact.getMobilePhone());
-        holder.txtContactPhoneNumber.setTextColor(Color.parseColor("#000000"));
-        holder.txtContactPhoneNumber.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-
-        flp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
-        );
-        flp.rightMargin = (int)(ValueFactory.getScreenWidth() * 0.02f);
-        flp.gravity = Gravity.CENTER_VERTICAL | Gravity.END;
-        holder.txtNetworkName.setLayoutParams(flp);
-        holder.txtNetworkName.setTextColor(Color.parseColor("#a1a1a1"));
-        holder.txtNetworkName.setTextSize(14);
-        String networkName = "";
-        if (!type.equals("CUSTOM")) {
-            networkName = (type.equals("11-TO-10")) ? ContactPhoneNumberHelper.getNetworkNameByPhoneNumber11(mContext, contact.getMobilePhone())
-                    : ContactPhoneNumberHelper.getNetworkNameByPhoneNumber10(mContext, contact.getMobilePhone());
+        if (!contact.getHomePhone().equals("")) {
+            llp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            holder.txtContactHomeNumber.setLayoutParams(llp);
+            holder.txtContactHomeNumber.setPadding(20, 2, 0, 15);
+            holder.txtContactHomeNumber.setTextColor(Color.parseColor("#808080"));
+            holder.txtContactHomeNumber.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+            String homeNumberText = "Home: " + contact.getHomePhone();
+            if (!type.equals("CUSTOM")) {
+                homeNumberText += " (" + ((type.equals("11-TO-10")) ? ContactPhoneNumberHelper.getNetworkNameByPhoneNumber11(mContext, contact.getHomePhone())
+                        : ContactPhoneNumberHelper.getNetworkNameByPhoneNumber10(mContext, contact.getHomePhone())) + ")";
+            }
+            holder.txtContactHomeNumber.setText(homeNumberText);
+            holder.txtContactHomeNumber.setVisibility(View.VISIBLE);
+        } else {
+            holder.txtContactHomeNumber.setVisibility(View.GONE);
         }
-        holder.txtNetworkName.setText(networkName);
+
+        if (!contact.getMobilePhone().equals("")) {
+            llp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            holder.txtContactPhoneNumber.setLayoutParams(llp);
+            holder.txtContactPhoneNumber.setPadding(20, 2, 0, 15);
+            holder.txtContactPhoneNumber.setTextColor(Color.parseColor("#808080"));
+            holder.txtContactPhoneNumber.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+            String mobileNumberText = "Mobile: " + contact.getMobilePhone();
+            if (!type.equals("CUSTOM")) {
+                mobileNumberText += " (" + ((type.equals("11-TO-10")) ? ContactPhoneNumberHelper.getNetworkNameByPhoneNumber11(mContext, contact.getMobilePhone())
+                        : ContactPhoneNumberHelper.getNetworkNameByPhoneNumber10(mContext, contact.getMobilePhone())) + ")";
+            }
+            holder.txtContactPhoneNumber.setText(mobileNumberText);
+            holder.txtContactPhoneNumber.setVisibility(View.VISIBLE);
+        } else {
+            holder.txtContactPhoneNumber.setVisibility(View.GONE);
+        }
+
+        if (!contact.getWorkPhone().equals("")) {
+            llp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            holder.txtContactWorkNumber.setLayoutParams(llp);
+            holder.txtContactWorkNumber.setPadding(20, 2, 0, 15);
+            holder.txtContactWorkNumber.setTextColor(Color.parseColor("#808080"));
+            holder.txtContactWorkNumber.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+            String workNumberText = "Work: " + contact.getWorkPhone();
+            if (!type.equals("CUSTOM")) {
+                workNumberText += " (" + ((type.equals("11-TO-10")) ? ContactPhoneNumberHelper.getNetworkNameByPhoneNumber11(mContext, contact.getWorkPhone())
+                        : ContactPhoneNumberHelper.getNetworkNameByPhoneNumber10(mContext, contact.getWorkPhone())) + ")";
+            }
+            holder.txtContactWorkNumber.setText(workNumberText);
+            holder.txtContactWorkNumber.setVisibility(View.VISIBLE);
+        } else {
+            holder.txtContactWorkNumber.setVisibility(View.GONE);
+        }
+
+
     }
 
     @Override
@@ -113,16 +149,19 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         FrameLayout frameMain;
         LinearLayout frameContactInfo;
         TextView txtContactName;
+        TextView txtContactHomeNumber;
         TextView txtContactPhoneNumber;
-        TextView txtNetworkName;
+        TextView txtContactWorkNumber;
+
 
         ViewHolder(View itemView) {
             super(itemView);
             frameMain = (FrameLayout) itemView.findViewById(R.id.frame_main);
             frameContactInfo = (LinearLayout) itemView.findViewById(R.id.frame_contact_info);
             txtContactName = (TextView) itemView.findViewById(R.id.contact_name);
+            txtContactHomeNumber = (TextView) itemView.findViewById(R.id.contact_home_number);
             txtContactPhoneNumber = (TextView) itemView.findViewById(R.id.contact_phone_number);
-            txtNetworkName = (TextView) itemView.findViewById(R.id.network_name);
+            txtContactWorkNumber = (TextView) itemView.findViewById(R.id.contact_work_number);
         }
     }
 }

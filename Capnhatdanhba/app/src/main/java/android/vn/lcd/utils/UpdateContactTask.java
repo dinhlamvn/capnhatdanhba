@@ -67,17 +67,39 @@ public class UpdateContactTask extends AsyncTask<Boolean, Void, ResultContact> {
             for (String s : keys) {
                 ResultContact item = new ResultContact();
                 HashMap<String, String> hmTempt = hm.get(s);
-                cnt = cnt + hmTempt.size();
 
                 if (hmTempt.size() > 0) {
 
                     item.setContactName(s);
 
-                    List<String> listKey = new ArrayList<>(hmTempt.keySet());
+                    if (hmTempt.get("HOME_OLD") != null) {
+                        item.setOldHomeNumber(hmTempt.get("HOME_OLD"));
+                        cnt++;
+                    }
 
-                    for (int i = 0; i < listKey.size(); i = i + 2) {
-                        item.setOldPhoneNumber(hmTempt.get(listKey.get(i)));
-                        item.setNewPhoneNumber(hmTempt.get(listKey.get(i + 1)));
+                    if (hmTempt.get("HOME_NEW") != null) {
+                        item.setNewHomeNumber(hmTempt.get("HOME_NEW"));
+                        cnt++;
+                    }
+
+                    if (hmTempt.get("MOBILE_OLD") != null) {
+                        item.setOldPhoneNumber(hmTempt.get("MOBILE_OLD"));
+                        cnt++;
+                    }
+
+                    if (hmTempt.get("MOBILE_NEW") != null) {
+                        item.setNewPhoneNumber(hmTempt.get("MOBILE_NEW"));
+                        cnt++;
+                    }
+
+                    if (hmTempt.get("MOBILE_WORK_OLD") != null) {
+                        item.setOldWorkNumber(hmTempt.get("MOBILE_WORK_OLD"));
+                        cnt++;
+                    }
+
+                    if (hmTempt.get("MOBILE_WORK_NEW") != null) {
+                        item.setNewWorkNumber(hmTempt.get("MOBILE_WORK_NEW"));
+                        cnt++;
                     }
                     resultContact.add(item);
                 }

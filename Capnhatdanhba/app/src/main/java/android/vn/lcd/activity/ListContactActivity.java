@@ -69,7 +69,7 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
 
         setUpTitle();
 
-        setUpSubTitleActionBar(mUpdateList.size());
+        setUpSubTitleActionBar();
     }
 
     private void setUpTitle() {
@@ -97,9 +97,10 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
         }
     }
 
-    private void setUpSubTitleActionBar(int size) {
+    private void setUpSubTitleActionBar() {
+
         if (mActionbar != null) {
-            mActionbar.setSubtitle("Tìm được " + size + " số");
+            mActionbar.setSubtitle("Tìm được " + getTotalUpdateNumber() + " số");
         }
     }
 
@@ -152,7 +153,7 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
         }
 
         mAdapter.notifyDataSetChanged();
-        setUpSubTitleActionBar(mUpdateList.size());
+        setUpSubTitleActionBar();
 
         return true;
     }
@@ -266,7 +267,7 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
                     }
                 }
 
-                if (mUpdateList.size() > 0) {
+                if (getTotalUpdateNumber() > 0) {
                     String title = getResources().getString(R.string.confirm_title);
                     String btnYes = getResources().getString(R.string.btn_yes);
                     String btnNo = getResources().getString(R.string.btn_cancel);
@@ -274,17 +275,17 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
 
                     switch (typeValue) {
                         case "CUSTOM":
-                            message = "Bạn muốn chuyển đổi <b>" + mUpdateList.size() + "</b> số có đầu số <b>"
+                            message = "Bạn muốn chuyển đổi <b>" + getTotalUpdateNumber() + "</b> số có đầu số <b>"
                                     + edtOldPhoneNumber.getText().toString()
                                     + "</b> sang đầu số <b>"
                                     + edtNewPhoneNumber.getText().toString()
                                     + "</b>?";
                             break;
                         case "11-TO-10":
-                            message = "Bạn muốn chuyển đổi <b>" + mUpdateList.size() + "</b> số có <b>11 số</b> sang số có <b>10 số</b>?";
+                            message = "Bạn muốn chuyển đổi <b>" + getTotalUpdateNumber() + "</b> số có <b>11 số</b> sang số có <b>10 số</b>?";
                             break;
                         case "10-TO-11":
-                            message = "Bạn muốn chuyển đổi <b>" + mUpdateList.size() + "</b> số có <b>10 số</b> sang số có <b>11 số</b>?";
+                            message = "Bạn muốn chuyển đổi <b>" + getTotalUpdateNumber() + "</b> số có <b>10 số</b> sang số có <b>11 số</b>?";
                             break;
                     }
 
@@ -354,16 +355,47 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
 
         for (Contact contact : mDataList) {
 
+            Contact contact1 = new Contact();
+
+            contact1.setId(contact.getId());
+            contact1.setName(contact.getName());
+            contact1.setHasPhone(contact.isHasPhone());
+            contact1.setHomePhone(contact.getHomePhone());
+            contact1.setMobilePhone(contact.getMobilePhone());
+            contact1.setWorkPhone(contact.getWorkPhone());
+
+            String a = contact1.getHomePhone();
+            String b = contact1.getMobilePhone();
+            String c = contact1.getWorkPhone();
+
+            boolean isAddHome = false;
+            boolean isAddMobile = false;
+            boolean isAddWork = false;
+
             if (typeValue.equals("11-TO-10")) {
-                if (ContactPhoneNumberHelper
-                        .getNetworkNameByPhoneNumber11(this, contact.getMobilePhone()).equals(networkName)) {
-                    mUpdateList.add(contact);
-                }
+                isAddHome = (ContactPhoneNumberHelper.getNetworkNameByPhoneNumber11(this, a).equals(networkName));
+                isAddMobile = (ContactPhoneNumberHelper.getNetworkNameByPhoneNumber11(this, b).equals(networkName));
+                isAddWork = (ContactPhoneNumberHelper.getNetworkNameByPhoneNumber11(this, c).equals(networkName));
             } else if (typeValue.equals("10-TO-11")) {
-                if (ContactPhoneNumberHelper
-                        .getNetworkNameByPhoneNumber10(this, contact.getMobilePhone()).equals(networkName)) {
-                    mUpdateList.add(contact);
-                }
+                isAddHome = (ContactPhoneNumberHelper.getNetworkNameByPhoneNumber10(this, a).equals(networkName));
+                isAddMobile = (ContactPhoneNumberHelper.getNetworkNameByPhoneNumber10(this, b).equals(networkName));
+                isAddWork = (ContactPhoneNumberHelper.getNetworkNameByPhoneNumber10(this, c).equals(networkName));
+            }
+
+            if (!isAddHome) {
+                contact1.setHomePhone("");
+            }
+
+            if (!isAddMobile) {
+                contact1.setMobilePhone("");
+            }
+
+            if (!isAddWork) {
+                contact1.setWorkPhone("");
+            }
+
+            if (isAddHome || isAddMobile || isAddWork) {
+                mUpdateList.add(contact1);
             }
         }
     }
@@ -373,12 +405,62 @@ public class ListContactActivity extends AppCompatActivity implements IViewConst
 
         for (Contact contact : mDataList) {
 
-            String pn = ContactPhoneNumberHelper.formatPhoneNumberWithoutWhiteSpace(contact.getMobilePhone());
-            if (pn.startsWith(startNumber)) {
-                mUpdateList.add(contact);
+            Contact contact1 = new Contact();
+
+            contact1.setId(contact.getId());
+            contact1.setName(contact.getName());
+            contact1.setHasPhone(contact.isHasPhone());
+            contact1.setHomePhone(contact.getHomePhone());
+            contact1.setMobilePhone(contact.getMobilePhone());
+            contact1.setWorkPhone(contact.getWorkPhone());
+
+            String a = ContactPhoneNumberHelper.formatPhoneNumberWithoutWhiteSpace(contact1.getHomePhone());
+            String b = ContactPhoneNumberHelper.formatPhoneNumberWithoutWhiteSpace(contact1.getMobilePhone());
+            String c = ContactPhoneNumberHelper.formatPhoneNumberWithoutWhiteSpace(contact1.getWorkPhone());
+
+            boolean isAddHome = false;
+            boolean isAddMobile = false;
+            boolean isAddWork = false;
+
+            isAddHome = a.startsWith(startNumber);
+            isAddMobile = b.startsWith(startNumber);
+            isAddWork = c.startsWith(startNumber);
+
+            if (!isAddHome) {
+                contact1.setHomePhone("");
             }
+
+            if (!isAddMobile) {
+                contact1.setMobilePhone("");
+            }
+
+            if (!isAddWork) {
+                contact1.setWorkPhone("");
+            }
+
+            if (isAddHome || isAddMobile || isAddWork) {
+                mUpdateList.add(contact1);
+            }
+
         }
         mAdapter.notifyDataSetChanged();
-        setUpSubTitleActionBar(mUpdateList.size());
+        setUpSubTitleActionBar();
+    }
+
+    private int getTotalUpdateNumber() {
+        int size = 0;
+
+        for (Contact contact : mUpdateList) {
+            if (!contact.getHomePhone().equals("")) {
+                size++;
+            }
+            if (!contact.getMobilePhone().equals("")) {
+                size++;
+            }
+            if (!contact.getWorkPhone().equals("")) {
+                size++;
+            }
+        }
+        return size;
     }
 }
