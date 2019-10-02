@@ -33,23 +33,23 @@ class ListDuplicateContactViewModel(private val contentResolver: ContentResolver
     }
 
     fun updateContact() {
-        contactList.value?.let { contactInfoList ->
-            val disposable = Single.fromCallable {
-                ContactHelper.changeListPhoneNumber(contentResolver, contactInfoList)
-            }.delay(5000, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe { _showLoading.value = LoadingInfo(title = "Converting...", isShow = true) }
-                    .doOnSuccess { _showLoading.value = LoadingInfo(isShow = false) }
-                    .subscribe { response, error ->
-                        if (response.isNotEmpty()) {
-                            _contactLoadError.value = "Update error ${error.localizedMessage}"
-                        } else {
-                            loadContactList()
-                        }
-                    }
-            compositeDisposable.add(disposable)
-        }
+//        contactList.value?.let { contactInfoList ->
+//            val disposable = Single.fromCallable {
+//                ContactHelper.changeListPhoneNumber(contentResolver, contactInfoList)
+//            }.delay(5000, TimeUnit.MILLISECONDS)
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .doOnSubscribe { _showLoading.value = LoadingInfo(title = "Converting...", isShow = true) }
+//                    .doOnSuccess { _showLoading.value = LoadingInfo(isShow = false) }
+//                    .subscribe { response, error ->
+//                        if (response.isNotEmpty()) {
+//                            _contactLoadError.value = "Update error ${error.localizedMessage}"
+//                        } else {
+//                            loadContactList()
+//                        }
+//                    }
+//            compositeDisposable.add(disposable)
+//        }
     }
 
     fun loadContactList() {

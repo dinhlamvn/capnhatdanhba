@@ -62,10 +62,6 @@ class ListContactFragment : BaseFragment() {
         listContactViewModel.updateContact()
     }
 
-    fun loadDulicateContact() {
-        listContactViewModel.loadDulicatesContact()
-    }
-
     fun loadListContact() {
         listContactViewModel.loadContactList()
     }

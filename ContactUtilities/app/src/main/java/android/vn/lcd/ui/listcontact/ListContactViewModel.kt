@@ -5,10 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import android.vn.lcd.base.BaseViewModel
 import android.vn.lcd.data.ContactInfo
+import android.vn.lcd.data.ContactUpdateInfo
 import android.vn.lcd.data.LoadingInfo
 import android.vn.lcd.extensions.filterNotAlone
+import android.vn.lcd.extensions.isInvalidHeadNumber
+import android.vn.lcd.extensions.mapToNewPhoneNumber
 import android.vn.lcd.helper.ContactHelper
 import android.vn.lcd.helper.LoadHelper
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -16,8 +20,8 @@ import java.util.concurrent.TimeUnit
 
 class ListContactViewModel(private val contentResolver: ContentResolver) : BaseViewModel() {
 
-    private val _contactList = MutableLiveData<List<ContactInfo>>()
-    val contactList : LiveData<List<ContactInfo>>
+    private val _contactList = MutableLiveData<List<ContactUpdateInfo>>()
+    val contactList : LiveData<List<ContactUpdateInfo>>
         get() = _contactList
 
     private val _contactLoadError = MutableLiveData<String>()
@@ -54,24 +58,22 @@ class ListContactViewModel(private val contentResolver: ContentResolver) : BaseV
 
     fun loadContactList() {
         val disposable = LoadHelper.loadListContact(contentResolver)
+                .delay(3000L, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    _showLoading.value = LoadingInfo(title = "Converting...", isShow = true)
+                    _showLoading.value = LoadingInfo(title = "Filtering...", isShow = true)
                 }
                 .doOnComplete {
                     _showLoading.value = LoadingInfo(isShow = false)
                 }
+                .map { list -> list.filter { it.phoneNumber.isInvalidHeadNumber() } }
+                .map { list-> list.map { ContactUpdateInfo(it, it.phoneNumber.mapToNewPhoneNumber()) } }
                 .subscribe({ result ->
                     _contactList.value = result
                 }, { error ->
                     _contactLoadError.value = error.message
                 })
         compositeDisposable.add(disposable)
-    }
-
-    fun loadDulicatesContact() {
-        val filterList = _contactList.value?.filterNotAlone()
-        _contactList.value = filterList
     }
 }
