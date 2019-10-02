@@ -1,6 +1,5 @@
 package android.vn.lcd.ui.listcontact
 
-import android.lcd.vn.capnhatdanhba.R
 import android.os.Bundle
 import android.view.View
 import android.vn.lcd.base.BaseFragment
@@ -10,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.adomino.ddsdb.R
 import kotlinx.android.synthetic.main.fragment_list_contact.*
 import kotlin.concurrent.timer
 

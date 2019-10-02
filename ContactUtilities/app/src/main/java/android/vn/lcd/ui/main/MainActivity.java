@@ -1,7 +1,6 @@
 package android.vn.lcd.ui.main;
 
 import android.Manifest;
-import android.lcd.vn.capnhatdanhba.R;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,11 +9,10 @@ import androidx.appcompat.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
 import android.vn.lcd.base.BaseActivity;
-import android.vn.lcd.base.BaseFragment;
 import android.vn.lcd.ui.listcontact.ListContactFragment;
-import android.vn.lcd.ui.listduplicate.ListDuplicateContactAdapter;
 import android.vn.lcd.ui.listduplicate.ListDuplicateContactFragment;
 
+import com.adomino.ddsdb.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;

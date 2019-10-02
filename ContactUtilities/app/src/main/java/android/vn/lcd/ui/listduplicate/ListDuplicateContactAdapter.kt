@@ -1,6 +1,5 @@
 package android.vn.lcd.ui.listduplicate
 
-import android.lcd.vn.capnhatdanhba.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.adomino.ddsdb.R
 
 class ListDuplicateContactAdapter
     : ListAdapter<ContactInfo, ListDuplicateContactAdapter.ContactItemViewHolder>(ContactDiffUtil()) {
