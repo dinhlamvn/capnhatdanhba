@@ -1,7 +1,5 @@
 package android.vn.lcd.extensions
 
-import android.vn.lcd.utils.PHONE_NUMBER_REGEX
-
 const val PHONE_NUMBER_REGEX = "^(0|(\\+84))(%s)([0-9]{7})\$"
 
 private val viettleNumbers = mapOf(
