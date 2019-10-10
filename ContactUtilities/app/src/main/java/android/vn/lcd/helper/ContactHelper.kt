@@ -6,6 +6,7 @@ import android.content.Context
 import android.provider.ContactsContract
 import android.util.Log
 import android.vn.lcd.data.ContactInfo
+import android.vn.lcd.data.ContactUpdateInfo
 import android.vn.lcd.extensions.mapToNewPhoneNumber
 
 const val CONTACT_CHANGE_RESULT_SUCCESS = -1
@@ -45,18 +46,17 @@ object ContactHelper {
 
     fun changeListPhoneNumber(
             resolver: ContentResolver,
-            contactInfoList: List<ContactInfo>
+            contactInfoList: List<ContactUpdateInfo>
     ): Array<Int> {
         val arrayList = arrayListOf<Int>()
-        contactInfoList.forEach { contactInfo ->
-            val newPhoneNumber = contactInfo.phoneNumber.mapToNewPhoneNumber()
-            Log.d("ConvertNumber", "${contactInfo.phoneNumber} convert to $newPhoneNumber")
-            Log.d("ConvertNumber", contactInfo.toString())
-            if (newPhoneNumber.isNotEmpty()) {
-                val result = changePhoneNumber(resolver, contactInfo.id, newPhoneNumber)
-                if (result > 0) {
-                    arrayList.add(result)
-                }
+        contactInfoList.forEach { contactUpdateInfoItem ->
+            val result = changePhoneNumber(
+                    resolver,
+                    contactUpdateInfoItem.contactInfo.id,
+                    contactUpdateInfoItem.newPhoneNumber
+            )
+            if (result > 0) {
+                arrayList.add(result)
             }
         }
         return arrayList.toTypedArray()

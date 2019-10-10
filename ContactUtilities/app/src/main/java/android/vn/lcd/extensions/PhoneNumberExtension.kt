@@ -55,6 +55,8 @@ fun String.mapToNewPhoneNumber(): String {
     return ""
 }
 
+fun String.isInvalidHeadNumber() = mapToNewPhoneNumber().isNotEmpty()
+
 fun String.hasNotAnySpace() = this.replace(" ", "", ignoreCase = true)
 
 private fun mapToNew(phoneNumber: String, oldNumber: String, newNumber: String): String {
@@ -74,6 +76,9 @@ infix fun String.phoneNumberEqualsTo(other: String): Boolean {
 private fun startWithZero(phoneNumber: String): String {
     if (phoneNumber.startsWith("+84")) {
         return phoneNumber.replace("+84", "0", ignoreCase = true)
+    }
+    if (phoneNumber.startsWith("84")) {
+        return "0" + phoneNumber.substring(2)
     }
     return phoneNumber
 }

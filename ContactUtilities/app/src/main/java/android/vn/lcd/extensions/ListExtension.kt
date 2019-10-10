@@ -7,8 +7,8 @@ fun <E> List<E>.toObservable(): Observable<List<E>> =
         Observable.just(this)
 
 fun List<ContactInfo>.filterNotAlone(): List<ContactInfo> =
-        filter { filterItem ->
-            count { it.phoneNumber phoneNumberEqualsTo filterItem.phoneNumber } > 1
+        filter { contact ->
+            count { it.phoneNumber phoneNumberEqualsTo contact.phoneNumber } > 1
         }
 
 fun main() {

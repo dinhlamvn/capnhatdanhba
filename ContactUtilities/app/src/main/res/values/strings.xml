@@ -31,6 +31,8 @@
     <string name="option_3"><u>Đổi đầu số</u></string>
     <string name="text_descript">⇨</string>
     <string name="text_develop_by">Phát triển bởi Adomino</string>
+    <string name="arrow">→</string>
+    <string name="result_empty">Không có dữ liệu nào được tìm thấy.</string>
 
 
     <!--Phone number start phone array-->

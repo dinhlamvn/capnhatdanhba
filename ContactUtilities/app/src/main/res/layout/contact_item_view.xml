@@ -31,6 +31,40 @@
         android:layout_marginBottom="8dp"
         android:textSize="15sp"
         android:textStyle="normal"
-        tools:text="012356789"/>
+        android:textColor="@color/textColor"
+        tools:text="01663706226"/>
+
+    <TextView
+        android:id="@+id/tvArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/tvPhoneNumber"
+        app:layout_constraintTop_toBottomOf="@+id/tvDisplayName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:text="@string/arrow"
+        android:textColor="@color/textColor"
+        tools:text="→"/>
+
+    <TextView
+        android:id="@+id/tvNewPhoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/tvArrow"
+        app:layout_constraintTop_toBottomOf="@+id/tvDisplayName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        android:textColor="@color/textColor"
+        tools:text="0363706226"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,10 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import android.vn.lcd.base.BaseViewModel
 import android.vn.lcd.data.ContactInfo
+import android.vn.lcd.data.ContactUpdateInfo
 import android.vn.lcd.data.LoadingInfo
 import android.vn.lcd.extensions.filterNotAlone
+import android.vn.lcd.extensions.isInvalidHeadNumber
+import android.vn.lcd.extensions.mapToNewPhoneNumber
 import android.vn.lcd.helper.ContactHelper
 import android.vn.lcd.helper.LoadHelper
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -16,30 +20,29 @@ import java.util.concurrent.TimeUnit
 
 class ListContactViewModel(private val contentResolver: ContentResolver) : BaseViewModel() {
 
-    private val _contactList = MutableLiveData<List<ContactInfo>>()
-    val contactList : LiveData<List<ContactInfo>>
+    private val _contactList = MutableLiveData<List<ContactUpdateInfo>>()
+    val contactList: LiveData<List<ContactUpdateInfo>>
         get() = _contactList
 
     private val _contactLoadError = MutableLiveData<String>()
-    val contactLoadError : LiveData<String>
+    val contactLoadError: LiveData<String>
         get() = _contactLoadError
 
     private val _showLoading = MutableLiveData<LoadingInfo>()
-    val showLoading : LiveData<LoadingInfo>
+    val showLoading: LiveData<LoadingInfo>
         get() = _showLoading
 
     init {
-        _showLoading.value = LoadingInfo()
+        loadContactList()
     }
 
     fun updateContact() {
         contactList.value?.let { contactInfoList ->
-            val disposable = Single.fromCallable {
+            Single.fromCallable {
                 ContactHelper.changeListPhoneNumber(contentResolver, contactInfoList)
-            }.delay(5000, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
+            }.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe { _showLoading.value = LoadingInfo(title = "Converting...", isShow = true) }
+                    .doOnSubscribe { _showLoading.value = LoadingInfo(message = "Converting...", isShow = true) }
                     .doOnSuccess { _showLoading.value = LoadingInfo(isShow = false) }
                     .subscribe { response, error ->
                         if (response.isNotEmpty()) {
@@ -47,31 +50,29 @@ class ListContactViewModel(private val contentResolver: ContentResolver) : BaseV
                         } else {
                             loadContactList()
                         }
-                    }
-            compositeDisposable.add(disposable)
+                    }.disposableOnClear()
         }
     }
 
-    fun loadContactList() {
-        val disposable = LoadHelper.loadListContact(contentResolver)
+    private fun loadContactList() {
+        LoadHelper.loadListContact(contentResolver)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    _showLoading.value = LoadingInfo(title = "Converting...", isShow = true)
+                    _showLoading.value = LoadingInfo(isShow = true)
                 }
-                .doOnComplete {
-                    _showLoading.value = LoadingInfo(isShow = false)
-                }
+                .map { list -> list.filter { contact -> contact.phoneNumber.isInvalidHeadNumber() } }
+                .map { list -> list.map { contact -> ContactUpdateInfo(contact, contact.phoneNumber.mapToNewPhoneNumber()) } }
                 .subscribe({ result ->
                     _contactList.value = result
+                    _showLoading.value = LoadingInfo(isShow = false)
                 }, { error ->
                     _contactLoadError.value = error.message
-                })
-        compositeDisposable.add(disposable)
+                }).disposableOnClear()
     }
 
-    fun loadDulicatesContact() {
-        val filterList = _contactList.value?.filterNotAlone()
-        _contactList.value = filterList
+    fun refreshList() {
+        _contactList.value = listOf()
+        loadContactList()
     }
 }

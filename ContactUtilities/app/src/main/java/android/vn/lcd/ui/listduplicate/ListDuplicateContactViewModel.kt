@@ -32,42 +32,27 @@ class ListDuplicateContactViewModel(private val contentResolver: ContentResolver
         _showLoading.value = LoadingInfo()
     }
 
-    fun updateContact() {
-        contactList.value?.let { contactInfoList ->
-            val disposable = Single.fromCallable {
-                ContactHelper.changeListPhoneNumber(contentResolver, contactInfoList)
-            }.delay(5000, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe { _showLoading.value = LoadingInfo(title = "Converting...", isShow = true) }
-                    .doOnSuccess { _showLoading.value = LoadingInfo(isShow = false) }
-                    .subscribe { response, error ->
-                        if (response.isNotEmpty()) {
-                            _contactLoadError.value = "Update error ${error.localizedMessage}"
-                        } else {
-                            loadContactList()
-                        }
-                    }
-            compositeDisposable.add(disposable)
-        }
-    }
-
     fun loadContactList() {
-        val disposable = LoadHelper.loadListContact(contentResolver)
-                .delay(5000, TimeUnit.MILLISECONDS)
+        LoadHelper.loadListContact(contentResolver)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    _showLoading.value = LoadingInfo(title = "Converting...", isShow = true)
+                    _showLoading.value = LoadingInfo(isShow = true)
                 }
                 .doOnComplete {
                     _showLoading.value = LoadingInfo(isShow = false)
                 }
+                .map { result -> result.filterNotAlone() }
                 .subscribe({ result ->
-                    _contactList.value = result.filterNotAlone()
+                    _contactList.value = result
                 }, { error ->
                     _contactLoadError.value = error.message
                 })
-        compositeDisposable.add(disposable)
+                .disposableOnClear()
+    }
+
+    fun refreshList() {
+        _contactList.value = listOf()
+        loadContactList()
     }
 }
