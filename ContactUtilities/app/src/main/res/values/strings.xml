@@ -32,6 +32,7 @@
     <string name="text_descript">⇨</string>
     <string name="text_develop_by">Phát triển bởi Adomino</string>
     <string name="arrow">→</string>
+    <string name="result_empty">Không có dữ liệu nào được tìm thấy.</string>
 
 
     <!--Phone number start phone array-->

@@ -77,5 +77,8 @@ private fun startWithZero(phoneNumber: String): String {
     if (phoneNumber.startsWith("+84")) {
         return phoneNumber.replace("+84", "0", ignoreCase = true)
     }
+    if (phoneNumber.startsWith("84")) {
+        return "0" + phoneNumber.substring(2)
+    }
     return phoneNumber
 }

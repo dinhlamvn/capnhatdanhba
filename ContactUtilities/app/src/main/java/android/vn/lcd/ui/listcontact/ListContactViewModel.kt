@@ -21,29 +21,28 @@ import java.util.concurrent.TimeUnit
 class ListContactViewModel(private val contentResolver: ContentResolver) : BaseViewModel() {
 
     private val _contactList = MutableLiveData<List<ContactUpdateInfo>>()
-    val contactList : LiveData<List<ContactUpdateInfo>>
+    val contactList: LiveData<List<ContactUpdateInfo>>
         get() = _contactList
 
     private val _contactLoadError = MutableLiveData<String>()
-    val contactLoadError : LiveData<String>
+    val contactLoadError: LiveData<String>
         get() = _contactLoadError
 
     private val _showLoading = MutableLiveData<LoadingInfo>()
-    val showLoading : LiveData<LoadingInfo>
+    val showLoading: LiveData<LoadingInfo>
         get() = _showLoading
 
     init {
-        _showLoading.value = LoadingInfo()
+        loadContactList()
     }
 
     fun updateContact() {
         contactList.value?.let { contactInfoList ->
-            val disposable = Single.fromCallable {
+            Single.fromCallable {
                 ContactHelper.changeListPhoneNumber(contentResolver, contactInfoList)
-            }.delay(5000, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
+            }.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe { _showLoading.value = LoadingInfo(title = "Converting...", isShow = true) }
+                    .doOnSubscribe { _showLoading.value = LoadingInfo(message = "Converting...", isShow = true) }
                     .doOnSuccess { _showLoading.value = LoadingInfo(isShow = false) }
                     .subscribe { response, error ->
                         if (response.isNotEmpty()) {
@@ -51,29 +50,29 @@ class ListContactViewModel(private val contentResolver: ContentResolver) : BaseV
                         } else {
                             loadContactList()
                         }
-                    }
-            compositeDisposable.add(disposable)
+                    }.disposableOnClear()
         }
     }
 
-    fun loadContactList() {
-        val disposable = LoadHelper.loadListContact(contentResolver)
-                .delay(3000L, TimeUnit.MILLISECONDS)
+    private fun loadContactList() {
+        LoadHelper.loadListContact(contentResolver)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    _showLoading.value = LoadingInfo(title = "Filtering...", isShow = true)
+                    _showLoading.value = LoadingInfo(isShow = true)
                 }
-                .doOnComplete {
-                    _showLoading.value = LoadingInfo(isShow = false)
-                }
-                .map { list -> list.filter { it.phoneNumber.isInvalidHeadNumber() } }
-                .map { list-> list.map { ContactUpdateInfo(it, it.phoneNumber.mapToNewPhoneNumber()) } }
+                .map { list -> list.filter { contact -> contact.phoneNumber.isInvalidHeadNumber() } }
+                .map { list -> list.map { contact -> ContactUpdateInfo(contact, contact.phoneNumber.mapToNewPhoneNumber()) } }
                 .subscribe({ result ->
                     _contactList.value = result
+                    _showLoading.value = LoadingInfo(isShow = false)
                 }, { error ->
                     _contactLoadError.value = error.message
-                })
-        compositeDisposable.add(disposable)
+                }).disposableOnClear()
+    }
+
+    fun refreshList() {
+        _contactList.value = listOf()
+        loadContactList()
     }
 }

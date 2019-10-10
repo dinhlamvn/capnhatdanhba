@@ -4,19 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import com.adomino.ddsdb.R
 import com.kaopiz.kprogresshud.KProgressHUD
+import kotlinx.android.synthetic.main.loading.view.*
 
 abstract class BaseFragment : Fragment() {
-
-    private val progress: KProgressHUD by lazy {
-        KProgressHUD.create(requireContext())
-                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setLabel("Loading...")
-                .setCancellable(true)
-                .setAnimationSpeed(2)
-                .setDimAmount(0.5f)
-    }
 
     abstract fun getLayoutResource() : Int
 
@@ -24,21 +20,5 @@ abstract class BaseFragment : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(getLayoutResource(), container, false)
-    }
-
-    fun showLoading(title: String, message: String = "") {
-        progress.setLabel(title)
-        progress.setDetailsLabel(message)
-        if (activity?.isFinishing == false) progress.show()
-    }
-
-    fun showLoading() {
-        progress.setLabel("Loading...")
-        progress.setDetailsLabel(null)
-        if (activity?.isFinishing == false) progress.show()
-    }
-
-    fun dismissLoading() {
-        if (activity?.isFinishing == false && progress.isShowing) progress.dismiss()
     }
 }

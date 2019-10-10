@@ -21,18 +21,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-        <TextView
-            android:text="Không có dữ liệu nào được tìm thấy."
-            tools:text="Không có dữ liệu nào được tìm thấy."
+        <include
             tools:visibility="visible"
-            android:visibility="visible"
-            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            layout="@layout/result_empty_notify_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/tvEmptyResult"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:visibility="gone"
+            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            layout="@layout/loading" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

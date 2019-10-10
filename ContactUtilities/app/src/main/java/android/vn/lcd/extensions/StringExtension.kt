@@ -8,34 +8,40 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 
 fun String.highLightOldPhoneNumber(): Spannable {
-    val builder = SpannableStringBuilder(this)
+    val strBuilder: StringBuilder = StringBuilder(this)
+    strBuilder.insert(0, "(")
+    strBuilder.insert(5, ")")
+    val builder = SpannableStringBuilder(strBuilder.toString())
     builder.setSpan(
             ForegroundColorSpan(Color.RED),
-            0,
-            this.length - 7,
+            1,
+            this.length - 6,
             Spannable.SPAN_EXCLUSIVE_INCLUSIVE
     )
     builder.setSpan(
             StyleSpan(Typeface.BOLD),
-            0,
-            this.length - 7,
+            1,
+            this.length - 6,
             Spannable.SPAN_EXCLUSIVE_INCLUSIVE
     )
     return builder
 }
 
 fun String.highLightNewPhoneNumber(): Spannable {
-    val builder = SpannableStringBuilder(this)
+    val strBuilder: StringBuilder = StringBuilder(this)
+    strBuilder.insert(0, "(")
+    strBuilder.insert(4, ")")
+    val builder = SpannableStringBuilder(strBuilder.toString())
     builder.setSpan(
             ForegroundColorSpan(Color.BLUE),
-            0,
+            1,
             this.length - 6,
             Spannable.SPAN_EXCLUSIVE_INCLUSIVE
     )
     builder.setSpan(
             StyleSpan(Typeface.BOLD),
-            0,
-            this.length - 7,
+            1,
+            this.length - 6,
             Spannable.SPAN_EXCLUSIVE_INCLUSIVE
     )
     return builder

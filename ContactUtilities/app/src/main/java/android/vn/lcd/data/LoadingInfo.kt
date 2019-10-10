@@ -1,7 +1,6 @@
 package android.vn.lcd.data
 
 data class LoadingInfo(
-        val title: String = "Loading...",
-        val content: String = "",
+        val message: String = "Loading...",
         val isShow: Boolean = false
 )

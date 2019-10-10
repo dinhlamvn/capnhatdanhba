@@ -3,17 +3,18 @@ package android.vn.lcd.ui.listcontact
 import android.os.Bundle
 import android.view.View
 import android.vn.lcd.base.BaseFragment
-import android.vn.lcd.helper.ContactHelper
-import android.widget.Toast
+import android.vn.lcd.base.LoadingBaseFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.adomino.ddsdb.R
 import kotlinx.android.synthetic.main.fragment_list_contact.*
-import kotlin.concurrent.timer
+import kotlinx.android.synthetic.main.fragment_list_contact.rvContactList
+import kotlinx.android.synthetic.main.fragment_list_contact.srlLayout
+import kotlinx.android.synthetic.main.fragment_list_duplicate_contact.*
 
-class ListContactFragment : BaseFragment() {
+class ListContactFragment : LoadingBaseFragment() {
 
     private val listContactViewModelFactory: ListContactViewModelFactory by lazy(LazyThreadSafetyMode.NONE) {
         ListContactViewModelFactory(requireContext().contentResolver)
@@ -45,24 +46,24 @@ class ListContactFragment : BaseFragment() {
 
         listContactViewModel.showLoading.observe(this, Observer { info ->
             if (info.isShow) {
-                if (info.title.isNotEmpty() && info.content.isNotEmpty()) {
-                    showLoading(title = info.title, message = info.content)
+                if (info.message.isNotEmpty()) {
+                    displayLoading(info.message)
                 } else {
-                    showLoading(title = info.title)
+                    displayLoading()
                 }
             } else {
                 dismissLoading()
             }
         })
 
-        listContactViewModel.loadContactList()
+        srlLayout.setOnRefreshListener {
+            srlLayout.isRefreshing = true
+            listContactViewModel.refreshList()
+            srlLayout.isRefreshing = false
+        }
     }
 
     fun executeUpdateContact() {
         listContactViewModel.updateContact()
-    }
-
-    fun loadListContact() {
-        listContactViewModel.loadContactList()
     }
 }
