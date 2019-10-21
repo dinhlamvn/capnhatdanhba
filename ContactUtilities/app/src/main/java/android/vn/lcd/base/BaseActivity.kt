@@ -33,4 +33,13 @@ abstract class BaseActivity : AppCompatActivity() {
                 .add(viewMainId(), frag, fragTag)
                 .commit()
     }
+
+    fun setActionBarTitle(title: String, subTitle: String = "") {
+        supportActionBar?.let { actionbar ->
+            actionbar.title = title
+            if (subTitle.isNotEmpty()) {
+                actionbar.subtitle = subTitle
+            }
+        }
+    }
 }

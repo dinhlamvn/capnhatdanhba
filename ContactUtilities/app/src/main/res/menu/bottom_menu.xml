@@ -8,7 +8,7 @@
             android:icon="@drawable/ic_sim_card" />
 
         <item android:id="@+id/itFindSame" android:title="Tìm số trùng"
-            android:icon="@drawable/ic_sync" />
+            android:icon="@drawable/ic_duplicate" />
 
         <item android:id="@+id/itConvert2" android:title="Tìm số rác"
             android:icon="@drawable/ic_sim_card" />

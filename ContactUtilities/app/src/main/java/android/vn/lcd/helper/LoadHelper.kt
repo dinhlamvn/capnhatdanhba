@@ -17,7 +17,7 @@ open class LoadHelper {
             val contactCursor = resolver.query(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     arrayOf(
-                            ContactsContract.CommonDataKinds.Phone._ID,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
                             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                             ContactsContract.CommonDataKinds.Phone.NUMBER
                     ),
@@ -29,7 +29,7 @@ open class LoadHelper {
                 if (cursor.moveToFirst()) {
                     do {
                         val id = cursor.getInt(cursor.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone._ID
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID
                         ))
                         val displayName = cursor.getString(cursor.getColumnIndex(
                                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME

@@ -2,8 +2,8 @@ package android.vn.lcd.ui.listduplicate
 
 import android.os.Bundle
 import android.view.View
-import android.vn.lcd.base.BaseFragment
 import android.vn.lcd.base.LoadingBaseFragment
+import android.vn.lcd.customview.LoadingPercentDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,12 +19,22 @@ class ListDuplicateContactFragment : LoadingBaseFragment() {
         ListDuplicateContactViewModelFactory(requireContext().contentResolver)
     }
 
-    private val listContactViewModel: ListDuplicateContactViewModel by lazy(LazyThreadSafetyMode.NONE) {
+    private val listDuplicateContactViewModel: ListDuplicateContactViewModel by lazy(LazyThreadSafetyMode.NONE) {
         ViewModelProviders.of(this, listContactViewModelFactory).get(ListDuplicateContactViewModel::class.java)
     }
 
+    private val loadingPercentDialog by lazy {
+        LoadingPercentDialog.newInstance()
+    }
+
     private val contactListAdapter: ListDuplicateContactAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        ListDuplicateContactAdapter()
+        ListDuplicateContactAdapter(ListDuplicateContactAdapter.OnContactChecked { contactInfo, isChecked ->
+            if (isChecked) {
+                listDuplicateContactViewModel.removeContactFromRemoveList(contactInfo)
+            } else {
+                listDuplicateContactViewModel.addContactToRemove(contactInfo)
+            }
+        })
     }
 
     override fun getLayoutResource(): Int {
@@ -37,7 +47,7 @@ class ListDuplicateContactFragment : LoadingBaseFragment() {
         rvContactList.adapter = contactListAdapter
         rvContactList.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
 
-        listContactViewModel.contactList.observe(this, Observer { contactList ->
+        listDuplicateContactViewModel.contactList.observe(this, Observer { contactList ->
             activity?.runOnUiThread {
                 contactListAdapter.setDataList(contactList)
             }
@@ -48,7 +58,7 @@ class ListDuplicateContactFragment : LoadingBaseFragment() {
             }
         })
 
-        listContactViewModel.showLoading.observe(this, Observer { info ->
+        listDuplicateContactViewModel.showLoading.observe(this, Observer { info ->
             if (info.isShow) {
                 if (info.message.isNotEmpty()) {
                     displayLoading(message = info.message)
@@ -60,12 +70,32 @@ class ListDuplicateContactFragment : LoadingBaseFragment() {
             }
         })
 
-        listContactViewModel.loadContactList()
+        listDuplicateContactViewModel.percentLoading.observe(this, Observer { info ->
+            if (info.isShow) {
+                if (loadingPercentDialog.isShowing) {
+                    loadingPercentDialog.doUpdate(info.percent, info.total)
+                } else {
+                    fragmentManager?.let { manager ->
+                        loadingPercentDialog.show(manager)
+                    }
+                }
+            } else {
+                if (loadingPercentDialog.showsDialog) {
+                    loadingPercentDialog.dismissAllowingStateLoss()
+                }
+            }
+        })
+
+        listDuplicateContactViewModel.loadContactList()
 
         srlLayout.setOnRefreshListener {
             srlLayout.isRefreshing = true
-            listContactViewModel.refreshList()
+            listDuplicateContactViewModel.refreshList()
             srlLayout.isRefreshing = false
         }
+    }
+
+    fun removeDuplicatePhoneNumber() {
+        listDuplicateContactViewModel.removeContactList()
     }
 }
