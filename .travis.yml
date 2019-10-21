@@ -13,3 +13,6 @@ script:
   - ./gradlew build connectedCheck
 jdk:
   - oraclejdk8
+branches:
+  only:
+    - master
