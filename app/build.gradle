@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 28
     defaultConfig {
+        buildToolsVersion "28.0.3"
         applicationId "com.adomino.ddsdb"
         minSdkVersion 15
         targetSdkVersion 28
