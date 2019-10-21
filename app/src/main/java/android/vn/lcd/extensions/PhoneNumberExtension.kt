@@ -74,11 +74,11 @@ infix fun String.phoneNumberEqualsTo(other: String): Boolean {
 }
 
 private fun startWithZero(phoneNumber: String): String {
-    if (phoneNumber.startsWith("+84")) {
-        return phoneNumber.replace("+84", "0", ignoreCase = true)
+    val newPhoneNumber = phoneNumber.map { c -> if (c < '0' || c > '9') "" else c.toString()}
+            .filter { s -> s.isNotEmpty() }
+            .joinToString(prefix = "", separator = "", postfix = "")
+    if (newPhoneNumber.startsWith("84")) {
+        return "0" + newPhoneNumber.substring(2)
     }
-    if (phoneNumber.startsWith("84")) {
-        return "0" + phoneNumber.substring(2)
-    }
-    return phoneNumber
+    return newPhoneNumber
 }
