@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.vn.lcd.base.BaseFragment
 import android.vn.lcd.base.LoadingBaseFragment
+import android.vn.lcd.ui.main.MainActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_list_contact.*
 import kotlinx.android.synthetic.main.fragment_list_contact.rvContactList
 import kotlinx.android.synthetic.main.fragment_list_contact.srlLayout
 import kotlinx.android.synthetic.main.fragment_list_duplicate_contact.*
+import java.util.*
 
 class ListContactFragment : LoadingBaseFragment() {
 
@@ -41,6 +43,9 @@ class ListContactFragment : LoadingBaseFragment() {
         listContactViewModel.contactList.observe(this, Observer { contactList ->
             activity?.runOnUiThread {
                 contactListAdapter.setDataList(contactList)
+                val actionBarTitle = String.format(Locale.getDefault(),
+                        getString(R.string.action_bar_title_change_number), contactList.size)
+                getBaseActivity().setActionBarTitle(actionBarTitle)
             }
         })
 

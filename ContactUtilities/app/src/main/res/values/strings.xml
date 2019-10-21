@@ -34,8 +34,6 @@
     <string name="arrow">→</string>
     <string name="result_empty">Không có dữ liệu nào được tìm thấy.</string>
 
-
-    <!--Phone number start phone array-->
-
+    <string name="action_bar_title_change_number">Đổi đầu số - Tìm được %d số</string>
 
 </resources>

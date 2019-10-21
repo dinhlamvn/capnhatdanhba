@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.util.Preconditions;
 
 import android.view.MenuItem;
 import android.view.View;
@@ -24,36 +25,39 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity
+        implements View.OnClickListener, MainViewListener {
 
     private ListContactFragment listContactFragment = new ListContactFragment();
 
     private ListDuplicateContactFragment listDuplicateContactFragment = new ListDuplicateContactFragment();
+
+    private static CurrentPage currentPage = CurrentPage.CHANGE_HEAD_NUMBER_PAGE;
+
+    private final MainViewListener viewListener = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.fbtExecute).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listContactFragment.executeUpdateContact();
-            }
-        });
+        findViewById(R.id.fbtExecute).setOnClickListener(this);
 
         BottomNavigationView bottomNavigationView  = findViewById(R.id.bnvFunction);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 item.setChecked(true);
-                if (item.getItemId() == R.id.itFindSame) {
-                    attachFragment(listDuplicateContactFragment);
-                } else {
+                if (item.getItemId() == R.id.itConvert) {
+                    currentPage = CurrentPage.CHANGE_HEAD_NUMBER_PAGE;
                     attachFragment(listContactFragment);
+                } else if (item.getItemId() == R.id.itFindSame){
+                    currentPage = CurrentPage.REMOVE_DUPLICATE_PAGE;
+                    attachFragment(listDuplicateContactFragment);
                 }
-                return false;
+                return true;
             }
         });
     }
@@ -72,10 +76,27 @@ public class MainActivity extends BaseActivity {
             }
 
             @Override
-            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+            public void onPermissionRationaleShouldBeShown(
+                    List<PermissionRequest> permissions,
+                    PermissionToken token
+            ) {
 
             }
         }).check();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (currentPage) {
+            case CHANGE_HEAD_NUMBER_PAGE: {
+                viewListener.executeUpdateContactList();
+                break;
+            }
+            case REMOVE_DUPLICATE_PAGE: {
+                viewListener.executeRemoveContactList();
+                break;
+            }
+        }
     }
 
     @Override
@@ -86,5 +107,15 @@ public class MainActivity extends BaseActivity {
     @Override
     public int viewMainId() {
         return R.id.container;
+    }
+
+    @Override
+    public void executeUpdateContactList() {
+        listContactFragment.executeUpdateContact();
+    }
+
+    @Override
+    public void executeRemoveContactList() {
+        listDuplicateContactFragment.removeDuplicatePhoneNumber();
     }
 }
