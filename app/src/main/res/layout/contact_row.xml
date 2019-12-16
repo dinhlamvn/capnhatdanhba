@@ -1,37 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/frame_main"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+  android:id="@+id/frame_main"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/frame_contact_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/contact_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/contact_home_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/contact_phone_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/contact_work_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
+  <LinearLayout
+    android:id="@+id/frame_contact_info"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/network_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+      android:id="@+id/contact_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+
+    <TextView
+      android:id="@+id/contact_home_number"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+
+    <TextView
+      android:id="@+id/contact_phone_number"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+
+    <TextView
+      android:id="@+id/contact_work_number"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+
+  </LinearLayout>
+
+  <TextView
+    android:id="@+id/network_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
 </FrameLayout>
