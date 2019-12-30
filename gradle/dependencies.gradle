@@ -1,0 +1,13 @@
+
+def deps = [:]
+
+// Dagger dependencies
+def daggerVersion = "2.25.3"
+def dagger = [:]
+dagger.core = "com.google.dagger:dagger-android:$daggerVersion"
+dagger.support = "com.google.dagger:dagger-android-support:$daggerVersion"
+dagger.processor = "com.google.dagger:dagger-android-processor:$daggerVersion"
+dagger.complier = "com.google.dagger:dagger-compiler:$daggerVersion"
+deps.dagger = dagger
+
+ext.deps = deps
