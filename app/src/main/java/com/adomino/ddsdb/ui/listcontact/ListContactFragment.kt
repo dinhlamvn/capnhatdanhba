@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.ui.listcontact
+package com.adomino.ddsdb.ui.listcontact
 
 import android.os.Bundle
 import android.view.View

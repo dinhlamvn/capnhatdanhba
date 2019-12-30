@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.customview
+package com.adomino.ddsdb.customview
 
 import android.content.DialogInterface
 import android.os.Bundle

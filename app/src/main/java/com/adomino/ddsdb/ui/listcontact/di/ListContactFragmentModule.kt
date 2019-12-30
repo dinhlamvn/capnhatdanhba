@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.ui.listcontact.di
+package com.adomino.ddsdb.ui.listcontact.di
 
 import android.vn.lcd.ui.listcontact.ListContactFragment
 import dagger.Module

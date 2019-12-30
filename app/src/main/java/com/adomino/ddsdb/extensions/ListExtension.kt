@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.extensions
+package com.adomino.ddsdb.extensions
 
 import android.vn.lcd.data.ContactInfo
 import io.reactivex.Observable

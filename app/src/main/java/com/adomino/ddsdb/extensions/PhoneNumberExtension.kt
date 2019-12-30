@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.extensions
+package com.adomino.ddsdb.extensions
 
 const val PHONE_NUMBER_REGEX = "^(0|(\\+84))(%s)([0-9]{7})\$"
 

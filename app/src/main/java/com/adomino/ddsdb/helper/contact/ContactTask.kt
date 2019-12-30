@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.helper.contact
+package com.adomino.ddsdb.helper.contact
 
 import android.vn.lcd.data.ContactInfo
 import io.reactivex.Single

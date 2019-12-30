@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.di
+package com.adomino.ddsdb.di
 
 import android.vn.lcd.App
 import android.vn.lcd.di.viewmodel.ViewModelFactoryModule

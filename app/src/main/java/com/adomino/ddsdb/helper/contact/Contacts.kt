@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.helper.contact
+package com.adomino.ddsdb.helper.contact
 
 import android.content.ContentProviderOperation
 import android.content.ContentResolver

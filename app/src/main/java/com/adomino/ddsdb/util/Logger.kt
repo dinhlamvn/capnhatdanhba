@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.util
+package com.adomino.ddsdb.util
 
 import android.util.Log
 

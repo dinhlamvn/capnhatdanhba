@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.ui.listcontact.di
+package com.adomino.ddsdb.ui.listcontact.di
 
 import javax.inject.Scope
 

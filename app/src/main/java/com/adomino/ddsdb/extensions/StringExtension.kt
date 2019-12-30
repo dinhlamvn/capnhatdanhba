@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.extensions
+package com.adomino.ddsdb.extensions
 
 import android.graphics.Color
 import android.graphics.Typeface

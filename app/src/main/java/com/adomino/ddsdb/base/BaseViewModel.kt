@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.base
+package com.adomino.ddsdb.base
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable

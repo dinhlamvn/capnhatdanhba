@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.base
+package com.adomino.ddsdb.base
 
 import android.os.Bundle
 import android.view.LayoutInflater

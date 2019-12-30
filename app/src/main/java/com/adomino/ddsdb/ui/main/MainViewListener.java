@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.ui.main;
+package com.adomino.ddsdb.ui.main;
 
 public interface MainViewListener {
 

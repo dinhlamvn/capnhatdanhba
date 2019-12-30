@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.helper.resource
+package com.adomino.ddsdb.helper.resource
 
 import android.content.Context
 

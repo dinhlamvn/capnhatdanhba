@@ -1,11 +1,11 @@
-package ddsdb.vn.lcd.ui.main
+package com.adomino.ddsdb.ui.main
 
 import android.Manifest
 import android.os.Bundle
 import android.view.View
 import android.vn.lcd.base.BaseActivity
 import android.vn.lcd.ui.listcontact.ListContactFragment
-import ddsdb.vn.lcd.ui.main.MainViewListener.CurrentPage
+import com.adomino.ddsdb.ui.main.MainViewListener.CurrentPage
 import androidx.appcompat.app.ActionBar
 import com.adomino.ddsdb.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -15,9 +15,9 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 
-class MainActivity : BaseActivity(), View.OnClickListener, _root_ide_package_.ddsdb.vn.lcd.ui.main.MainViewListener {
+class MainActivity : BaseActivity(), View.OnClickListener, _root_ide_package_.com.adomino.ddsdb.ui.main.MainViewListener {
 
-  private val viewListener: _root_ide_package_.ddsdb.vn.lcd.ui.main.MainViewListener = this
+  private val viewListener: _root_ide_package_.com.adomino.ddsdb.ui.main.MainViewListener = this
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.data;
+package com.adomino.ddsdb.data;
 
 public class Contact {
 

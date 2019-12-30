@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.ui.listcontact
+package com.adomino.ddsdb.ui.listcontact
 
 import android.vn.lcd.base.BaseViewModel
 import android.vn.lcd.data.ContactUpdateInfo

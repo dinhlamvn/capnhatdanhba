@@ -1,4 +1,4 @@
-package ddsdb.vn.lcd.di.viewmodel
+package com.adomino.ddsdb.di.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
