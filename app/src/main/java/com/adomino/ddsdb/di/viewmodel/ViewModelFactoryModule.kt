@@ -1,8 +1,8 @@
 package com.adomino.ddsdb.di.viewmodel
 
-import android.vn.lcd.ui.listcontact.ListContactViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.adomino.ddsdb.ui.listcontact.ListContactViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -11,7 +11,7 @@ import dagger.multibindings.IntoMap
 interface ViewModelFactoryModule {
   @Binds
   @IntoMap
-  @_root_ide_package_.com.adomino.ddsdb.di.viewmodel.ViewModelKey(ListContactViewModel::class)
+  @ViewModelKey(ListContactViewModel::class)
   fun bindListContactViewModel(viewModel: ListContactViewModel): ViewModel
 
   @Binds

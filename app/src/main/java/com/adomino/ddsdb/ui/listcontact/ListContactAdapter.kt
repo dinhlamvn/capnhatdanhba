@@ -3,14 +3,14 @@ package com.adomino.ddsdb.ui.listcontact
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.vn.lcd.data.ContactUpdateInfo
-import android.vn.lcd.extensions.highLightNewPhoneNumber
-import android.vn.lcd.extensions.highLightOldPhoneNumber
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.adomino.ddsdb.R
+import com.adomino.ddsdb.data.ContactUpdateInfo
+import com.adomino.ddsdb.extensions.highLightNewPhoneNumber
+import com.adomino.ddsdb.extensions.highLightOldPhoneNumber
 
 class ListContactAdapter
   : ListAdapter<ContactUpdateInfo, ListContactAdapter.ContactItemViewHolder>(ContactDiffUtil()) {

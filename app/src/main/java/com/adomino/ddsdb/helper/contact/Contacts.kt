@@ -3,8 +3,8 @@ package com.adomino.ddsdb.helper.contact
 import android.content.ContentProviderOperation
 import android.content.ContentResolver
 import android.provider.ContactsContract
-import android.vn.lcd.data.ContactInfo
-import android.vn.lcd.util.Logger
+import com.adomino.ddsdb.data.ContactInfo
+import com.adomino.ddsdb.util.Logger
 import io.reactivex.Single
 
 class Contacts(private val resolver: ContentResolver) : ContactTask {

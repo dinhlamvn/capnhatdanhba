@@ -1,14 +1,14 @@
 package com.adomino.ddsdb.ui.listcontact
 
-import android.vn.lcd.base.BaseViewModel
-import android.vn.lcd.data.ContactUpdateInfo
-import android.vn.lcd.data.LoadingInfo
-import android.vn.lcd.extensions.isInvalidHeadNumber
-import android.vn.lcd.extensions.mapToNewPhoneNumber
-import android.vn.lcd.helper.contact.ContactTask
-import android.vn.lcd.util.Logger
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.adomino.ddsdb.base.BaseViewModel
+import com.adomino.ddsdb.data.ContactUpdateInfo
+import com.adomino.ddsdb.data.LoadingInfo
+import com.adomino.ddsdb.extensions.isInvalidHeadNumber
+import com.adomino.ddsdb.extensions.mapToNewPhoneNumber
+import com.adomino.ddsdb.helper.contact.ContactTask
+import com.adomino.ddsdb.util.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

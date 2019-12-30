@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply from: '../gradle/dependencies.gradle'
 
 android {
   compileSdkVersion 28
@@ -22,6 +24,9 @@ android {
   dexOptions {
     // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
     preDexLibraries = preDexEnabled && !travisBuild
+  }
+  kapt {
+    generateStubs true
   }
 }
 
@@ -59,7 +64,10 @@ dependencies {
   // Material resource
   implementation 'com.google.android.material:material:1.1.0-alpha04'
 
-  implementation 'com.jakewharton.timber:timber:4.7.1'
+  implementation deps.dagger.core
+  implementation deps.dagger.support
+  kapt deps.dagger.processor
+  kapt deps.dagger.complier
 }
 repositories {
   mavenCentral()

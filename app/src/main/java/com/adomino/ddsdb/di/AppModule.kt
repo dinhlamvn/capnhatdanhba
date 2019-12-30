@@ -2,13 +2,13 @@ package com.adomino.ddsdb.di
 
 import android.app.Application
 import android.content.Context
-import android.vn.lcd.App
-import android.vn.lcd.helper.contact.ContactTask
-import android.vn.lcd.helper.contact.Contacts
-import android.vn.lcd.helper.resource.DrawableProvider
-import android.vn.lcd.helper.resource.ResourceProvider
-import android.vn.lcd.helper.resource.StringProvider
-import android.vn.lcd.ui.main.MainActivityModule
+import com.adomino.ddsdb.App
+import com.adomino.ddsdb.helper.contact.ContactTask
+import com.adomino.ddsdb.helper.contact.Contacts
+import com.adomino.ddsdb.helper.resource.DrawableProvider
+import com.adomino.ddsdb.helper.resource.ResourceProvider
+import com.adomino.ddsdb.helper.resource.StringProvider
+import com.adomino.ddsdb.ui.main.MainActivityModule
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

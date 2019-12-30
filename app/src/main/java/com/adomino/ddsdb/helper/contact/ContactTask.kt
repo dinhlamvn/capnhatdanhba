@@ -1,6 +1,6 @@
 package com.adomino.ddsdb.helper.contact
 
-import android.vn.lcd.data.ContactInfo
+import com.adomino.ddsdb.data.ContactInfo
 import io.reactivex.Single
 
 interface ContactTask {

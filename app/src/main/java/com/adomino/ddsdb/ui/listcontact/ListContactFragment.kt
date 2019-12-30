@@ -2,9 +2,6 @@ package com.adomino.ddsdb.ui.listcontact
 
 import android.os.Bundle
 import android.view.View
-import android.vn.lcd.base.BaseFragment
-import android.vn.lcd.helper.resource.ResourceProvider
-import android.vn.lcd.ui.listcontact.di.ListContactScope
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -12,6 +9,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.adomino.ddsdb.R
+import com.adomino.ddsdb.base.BaseFragment
+import com.adomino.ddsdb.helper.resource.ResourceProvider
+import com.adomino.ddsdb.ui.listcontact.di.ListContactScope
 import java.util.*
 import javax.inject.Inject
 

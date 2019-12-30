@@ -1,6 +1,6 @@
 package com.adomino.ddsdb.ui.main
 
-import android.vn.lcd.ui.listcontact.di.ListContactFragmentModule
+import com.adomino.ddsdb.ui.listcontact.di.ListContactFragmentModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
