@@ -1,7 +1,8 @@
 package com.adomino.ddsdb.base
 
 import android.os.Bundle
-import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
+import androidx.annotation.MainThread
 import androidx.appcompat.app.ActionBar
 import dagger.android.support.DaggerAppCompatActivity
 
@@ -9,32 +10,29 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    setContentView(viewId())
 
     supportActionBar?.let { actionBar ->
       onActionBarConfiguration(actionBar)
     }
+
+    onInitUI()
   }
 
-  abstract fun onActionBarConfiguration(actionBar: ActionBar)
-
-  @IdRes
-  abstract fun viewMainId(): Int
-
-  protected fun attachFragment(frag: BaseFragment) {
-    supportFragmentManager
-      .beginTransaction()
-      .replace(viewMainId(), frag)
-      .commit()
+  open fun onActionBarConfiguration(actionBar: ActionBar) {
+    
   }
 
-  protected fun attachFragment(frag: BaseFragment, fragTag: String) {
-    supportFragmentManager
-      .beginTransaction()
-      .add(viewMainId(), frag, fragTag)
-      .commit()
-  }
+  @LayoutRes
+  abstract fun viewId(): Int
 
-  fun setActionBarTitle(title: String, subTitle: String = "") {
+  @MainThread
+  abstract fun onInitUI()
+
+  fun setActionBarTitle(
+    title: String,
+    subTitle: String = ""
+  ) {
     supportActionBar?.let { actionbar ->
       actionbar.title = title
       if (subTitle.isNotEmpty()) {

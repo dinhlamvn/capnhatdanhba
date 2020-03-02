@@ -68,6 +68,9 @@ dependencies {
   implementation deps.dagger.support
   kapt deps.dagger.processor
   kapt deps.dagger.complier
+
+  // View Pager 2
+  implementation 'androidx.viewpager2:viewpager2:1.0.0'
 }
 repositories {
   mavenCentral()
