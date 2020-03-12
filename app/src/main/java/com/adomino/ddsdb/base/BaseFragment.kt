@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.adomino.ddsdb.common.Constant
 import dagger.android.support.DaggerFragment
 
 abstract class BaseFragment : DaggerFragment() {
@@ -18,9 +19,17 @@ abstract class BaseFragment : DaggerFragment() {
     savedInstanceState: Bundle?
   ): View? {
     return inflater.inflate(layout(), container, false)
-        .apply {
-          onInitUI(this)
-        }
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    onInitUI(view)
+  }
+
+  fun args(): Lazy<FragmentArgs> {
+    return lazy {
+      checkNotNull(arguments) { "Argument is null value." }.getParcelable(
+          Constant.FRAGMENT_ARGS) as FragmentArgs
+    }
+  }
 }

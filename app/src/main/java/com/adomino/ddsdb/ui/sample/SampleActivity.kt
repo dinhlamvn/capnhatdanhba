@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.adomino.ddsdb.R
 import com.adomino.ddsdb.recyclerview.XAdapter
+import com.adomino.ddsdb.recyclerview.XModel
 
 class SampleActivity : AppCompatActivity() {
 
@@ -34,8 +35,12 @@ class SampleActivity : AppCompatActivity() {
         }
     recyclerView.adapter = adapter
 
+    val models = mutableListOf<XModel>()
+
     for (i in 0..100) {
-      adapter.addModel(SampleModel("$i", "Dinh $i"))
+      models.add(SampleModel("$i", "Dinh $i"))
     }
+
+    adapter.submitChange(models)
   }
 }

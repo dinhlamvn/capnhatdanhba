@@ -1,18 +1,22 @@
 package com.adomino.ddsdb.ui.listcontact
 
+import com.adomino.ddsdb.data.ContactInfo
+import com.adomino.ddsdb.data.ContactUpdateInfo
 import com.adomino.ddsdb.recyclerview.XModel
 
 data class ContactUiModel(
-  val id: Int,
-  val name: String
+  val contactUpdateInfo: ContactUpdateInfo = ContactUpdateInfo(
+      contactInfo = ContactInfo()
+  )
 ) : XModel {
   override fun isEquals(other: XModel?): Boolean {
-    return this.id == (other as ContactUiModel).id
+    val o = other as ContactUiModel
+    return this.contactUpdateInfo.contactInfo.id == o.contactUpdateInfo.contactInfo.id
   }
 
   override fun isEqualsContents(other: XModel?): Boolean {
-    val model = other as ContactUiModel
-    return this.id == model.id && this.name == model.name
+    val o = other as ContactUiModel
+    return this.contactUpdateInfo.contactInfo == o.contactUpdateInfo.contactInfo
   }
 
   override fun viewType(): Int {

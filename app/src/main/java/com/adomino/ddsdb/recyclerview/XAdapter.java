@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XAdapter extends ListAdapter<XModel, XViewHolder> {
-  private List<XModel> models = new ArrayList<>();
+
   private XViewHolder.Factory viewHolderFactory;
   private XClickListener listener;
 
@@ -33,11 +33,8 @@ public class XAdapter extends ListAdapter<XModel, XViewHolder> {
     return this;
   }
 
-  public void addModel(XModel model) {
-    if (!this.models.contains(model)) {
-      this.models.add(model);
-      submitList(this.models);
-    }
+  public void submitChange(List<XModel> models) {
+    submitList(models);
   }
 
   @NonNull

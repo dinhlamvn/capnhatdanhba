@@ -4,15 +4,25 @@ import android.util.Log
 
 object Logger {
 
+  private const val TAG = "ContactUtilApp"
+
+  private var enableLog: Boolean = false
+
   fun d(message: String) {
-    Log.d("ContactUtilities", message)
+    if (enableLog) {
+      Log.d(TAG, message)
+    }
   }
 
   fun i(message: String) {
-    Log.i("ContactUtilities", message)
+    if (enableLog) {
+      Log.i(TAG, message)
+    }
   }
 
   fun e(message: String) {
-    Log.e("ContactUtilities", message)
+    if (enableLog) {
+      Log.e(TAG, message)
+    }
   }
 }
