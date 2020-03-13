@@ -15,5 +15,7 @@ public abstract class XViewHolder<T extends XModel> extends RecyclerView.ViewHol
     super(itemView);
   }
 
-  public abstract void bind(@NonNull T model);
+  public void bind(@NonNull T model) {
+    
+  }
 }

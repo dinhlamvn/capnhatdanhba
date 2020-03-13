@@ -8,6 +8,8 @@ import com.adomino.ddsdb.helper.contact.Contacts
 import com.adomino.ddsdb.helper.resource.DrawableProvider
 import com.adomino.ddsdb.helper.resource.ResourceProvider
 import com.adomino.ddsdb.helper.resource.StringProvider
+import com.adomino.ddsdb.interactor.local.ContactService
+import com.adomino.ddsdb.interactor.local.LocalService
 import com.adomino.ddsdb.ui.main.MainActivityModule
 import dagger.Binds
 import dagger.Module
@@ -22,6 +24,9 @@ class AppModule {
   interface Binding {
     @Binds
     fun bindApplication(app: App): Application
+
+    @Binds
+    fun bindContactService(contactService: ContactService): LocalService.Contact
   }
 
   @Provides

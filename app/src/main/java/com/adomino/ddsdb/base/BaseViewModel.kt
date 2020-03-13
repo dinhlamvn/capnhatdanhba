@@ -1,6 +1,7 @@
 package com.adomino.ddsdb.base
 
 import androidx.lifecycle.ViewModel
+import com.adomino.ddsdb.common.SingleLiveEvent
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
@@ -19,16 +20,26 @@ abstract class BaseViewModel : ViewModel() {
     compositeDisposable.add(this)
   }
 
-  fun <T> Observable<T>.execute(success: T.() -> Unit, error: (Throwable) -> Unit) {
+  fun <T> Observable<T>.execute(
+    error: ((Throwable) -> Unit)? = null,
+    success: T.() -> Unit
+  ) {
     this.subscribe({ response ->
       success.invoke(response)
     }, { t ->
-      error.invoke(t)
+      error?.invoke(t)
     }
     ).disposableOnClear()
   }
 
-  fun <T> Single<T>.execute(success: T.() -> Unit, error: (Throwable) -> Unit) {
-    this.toObservable().execute(success, error)
+  fun <T> Single<T>.execute(
+    error: ((Throwable) -> Unit)? = null,
+    success: T.() -> Unit
+  ) {
+    this.toObservable().execute(error, success)
+  }
+
+  fun <T> syncData(data: SingleLiveEvent<T>, newValue: T) {
+    data.submitChange(newValue)
   }
 }

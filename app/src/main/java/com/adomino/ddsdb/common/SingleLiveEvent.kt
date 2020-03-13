@@ -21,4 +21,8 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
       }
     })
   }
+
+  fun submitChange(value: T) {
+    setValue(value)
+  }
 }

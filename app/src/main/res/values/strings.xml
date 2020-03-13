@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">Đổi đầu số danh bạ</string>
+  <string name="app_name">Tiện ích danh bạ</string>
 
   <!--Button text-->
   <string name="btn_yes">Đồng ý</string>
@@ -35,5 +35,10 @@
   <string name="result_empty">Không có dữ liệu nào được tìm thấy.</string>
 
   <string name="action_bar_title_change_number">Đổi đầu số - Tìm được %d số</string>
+
+  <string name="loading_list_contact">Đang tải danh sách danh bạ...</string>
+  <string name="bottom_bar_contact_title">Danh bạ</string>
+  <string name="bottom_bar_contact_duplicate">Số trùng</string>
+  <string name="bottom_bar_contact_invalid">Số rác</string>
 
 </resources>

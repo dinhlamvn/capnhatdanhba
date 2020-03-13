@@ -4,15 +4,14 @@ import androidx.lifecycle.LiveData
 import com.adomino.ddsdb.base.BaseViewModel
 import com.adomino.ddsdb.common.SingleLiveEvent
 import com.adomino.ddsdb.data.ContactUpdateInfo
-import com.adomino.ddsdb.extensions.isInvalidHeadNumber
-import com.adomino.ddsdb.extensions.mapToNewPhoneNumber
-import com.adomino.ddsdb.helper.contact.ContactTask
+import com.adomino.ddsdb.interactor.local.LocalService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ListContactViewModel @Inject constructor(
-  private val contactTask: ContactTask
+  private val services: LocalService.Contact
 ) : BaseViewModel() {
 
   private val _contactList = SingleLiveEvent<List<ContactUpdateInfo>>()
@@ -24,35 +23,19 @@ class ListContactViewModel @Inject constructor(
   }
 
   fun updateContact() {
-    val contactDataList = contactList.value ?: return
-    contactDataList.map { updateInfo ->
-      updateInfo.contactInfo
-    }.forEach { info ->
-      contactTask.update(info)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribeOn(Schedulers.io())
-          .execute({
 
-          }, {
-
-          })
-    }
   }
 
-  private fun loadContactList() {
-    contactTask.load()
-        .observeOn(AndroidSchedulers.mainThread())
+  fun loadContactList() {
+    services.fetchContactList()
+        .delay(1, TimeUnit.SECONDS)
         .subscribeOn(Schedulers.io())
-        .map { list -> list.filter { contactInfo -> contactInfo.phoneNumber.isInvalidHeadNumber() } }
-        .map { list ->
-          list.map { contact ->
-            ContactUpdateInfo(contact, contact.phoneNumber.mapToNewPhoneNumber())
-          }
+        .observeOn(AndroidSchedulers.mainThread())
+        .execute {
+          syncData(
+              _contactList,
+              this.map { contactInfo -> ContactUpdateInfo(contactInfo, "") }
+          )
         }
-        .execute({
-          _contactList.setValue(this)
-        }, {
-
-        })
   }
 }

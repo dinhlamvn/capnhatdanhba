@@ -7,18 +7,18 @@
 
     <item
       android:id="@+id/itConvert"
-      android:icon="@drawable/ic_sim_card"
-      android:title="Đổi đầu số" />
+      android:icon="@drawable/ic_contact"
+      android:title="@string/bottom_bar_contact_title" />
 
     <item
       android:id="@+id/itFindSame"
       android:icon="@drawable/ic_duplicate"
-      android:title="Tìm số trùng" />
+      android:title="@string/bottom_bar_contact_duplicate" />
 
     <item
       android:id="@+id/itConvert2"
-      android:icon="@drawable/ic_sim_card"
-      android:title="Tìm số rác" />
+      android:icon="@drawable/ic_invalid_contact"
+      android:title="@string/bottom_bar_contact_invalid" />
 
     <item
       android:id="@+id/itDelete"

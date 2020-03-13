@@ -3,7 +3,7 @@ package com.adomino.ddsdb.recyclerview;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class XAdapter extends ListAdapter<XModel, XViewHolder> {
@@ -13,15 +13,17 @@ public class XAdapter extends ListAdapter<XModel, XViewHolder> {
 
   private XAdapter() {
     super(new XDiffUtil());
+    setHasStableIds(true);
   }
 
-  public static XAdapter create() {
-    return new XAdapter();
+  public static XAdapter create(XViewHolder.Factory viewHolderFactory) {
+    XAdapter instance = new XAdapter();
+    instance.setViewHolderFactory(viewHolderFactory);
+    return instance;
   }
 
-  public XAdapter setViewHolderFactory(XViewHolder.Factory viewHolderFactory) {
+  private void setViewHolderFactory(XViewHolder.Factory viewHolderFactory) {
     this.viewHolderFactory = viewHolderFactory;
-    return this;
   }
 
   @Override public int getItemViewType(int position) {
@@ -31,6 +33,10 @@ public class XAdapter extends ListAdapter<XModel, XViewHolder> {
   public XAdapter setItemClickListener(XClickListener listener) {
     this.listener = listener;
     return this;
+  }
+
+  public void submitChange(XModel model) {
+    submitChange(Collections.singletonList(model));
   }
 
   public void submitChange(List<XModel> models) {

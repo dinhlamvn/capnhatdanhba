@@ -19,19 +19,18 @@ class SampleActivity : AppCompatActivity() {
     val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
 
     recyclerView.layoutManager = LinearLayoutManager(this)
-    val adapter = XAdapter.create()
+    val adapter = XAdapter.create { viewGroup, _ ->
+          SampleViewHolder(
+              LayoutInflater.from(this@SampleActivity)
+                  .inflate(R.layout.text_view_1, viewGroup, false)
+          )
+        }
         .setItemClickListener { view, model, position ->
           view?.setOnClickListener {
             val sample = model as SampleModel
             Toast.makeText(this@SampleActivity, "Hello ${sample.name}", Toast.LENGTH_LONG)
                 .show()
           }
-        }
-        .setViewHolderFactory { viewGroup, _ ->
-          SampleViewHolder(
-              LayoutInflater.from(this@SampleActivity)
-                  .inflate(R.layout.text_view_1, viewGroup, false)
-          )
         }
     recyclerView.adapter = adapter
 

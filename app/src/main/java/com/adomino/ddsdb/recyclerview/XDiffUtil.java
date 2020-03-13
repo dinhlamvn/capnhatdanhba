@@ -4,7 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
 public class XDiffUtil extends DiffUtil.ItemCallback<XModel> {
-  @Override public boolean areItemsTheSame(@NonNull XModel oldItem, @NonNull XModel newItem) {
+  @Override
+  public boolean areItemsTheSame(@NonNull XModel oldItem, @NonNull XModel newItem) {
     return oldItem.isEquals(newItem);
   }
 
