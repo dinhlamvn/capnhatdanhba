@@ -35,6 +35,11 @@ public class XAdapter extends ListAdapter<XModel, XViewHolder> {
     return this;
   }
 
+  @Override
+  public long getItemId(int position) {
+    return getItem(position).id();
+  }
+
   public void submitChange(XModel model) {
     submitChange(Collections.singletonList(model));
   }

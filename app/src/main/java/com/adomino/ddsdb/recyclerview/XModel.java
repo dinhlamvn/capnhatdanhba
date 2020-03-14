@@ -1,12 +1,23 @@
 package com.adomino.ddsdb.recyclerview;
 
 public abstract class XModel {
-  protected boolean isEquals(XModel other) {
-    return hashId() == other.hashId();
+
+  private int id = 0;
+
+  public XModel(int id) {
+    this.id = id;
   }
 
-  protected boolean isEqualsContents(XModel other) {
-    return hashId() == other.hashId();
+  boolean isEquals(XModel other) {
+    return id() == other.id();
+  }
+
+  boolean isEqualsContents(XModel other) {
+    return id() == other.id() && this.equals(other);
+  }
+
+  protected int id() {
+    return (id * hashId() + 32 * id);
   }
 
   public abstract int viewType();

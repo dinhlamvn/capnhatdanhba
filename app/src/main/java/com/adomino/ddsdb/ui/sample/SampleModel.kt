@@ -5,7 +5,7 @@ import com.adomino.ddsdb.recyclerview.XModel
 data class SampleModel(
   val id: String,
   val name: String
-) : XModel() {
+) : XModel(0) {
 
   override fun viewType(): Int {
     return -1

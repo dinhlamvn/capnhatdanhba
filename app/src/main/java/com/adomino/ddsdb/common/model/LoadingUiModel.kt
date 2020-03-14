@@ -3,8 +3,9 @@ package com.adomino.ddsdb.common.model
 import com.adomino.ddsdb.recyclerview.XModel
 
 data class LoadingUiModel(
+  val id: Int,
   val text: String = ""
-) : XModel() {
+) : XModel(id) {
 
   companion object {
     const val ID: Int = 9999

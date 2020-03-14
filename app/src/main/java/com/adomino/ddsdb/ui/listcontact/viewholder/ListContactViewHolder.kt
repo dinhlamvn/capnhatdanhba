@@ -1,5 +1,6 @@
 package com.adomino.ddsdb.ui.listcontact.viewholder
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,7 @@ class ListContactViewHolder(view: View) : XViewHolder<ContactUiModel>(view) {
   private val tvArrow: TextView by view.bindView(R.id.tvArrow)
 
   override fun bind(model: ContactUiModel) {
+    Log.d("DinhLam", "Contact info ${model.contactUpdateInfo.contactInfo.displayName}")
     val contactInfo = model.contactUpdateInfo.contactInfo
     tvDisplayName.text = contactInfo.displayName
     tvPhoneNumber.text = contactInfo.phoneNumber

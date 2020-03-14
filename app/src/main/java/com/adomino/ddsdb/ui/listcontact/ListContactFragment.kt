@@ -69,7 +69,7 @@ class ListContactFragment : BaseFragment() {
   }
 
   private val loadingUiModel by lazy {
-    LoadingUiModel(requireContext().getString(R.string.loading_list_contact))
+    LoadingUiModel(1111, requireContext().getString(R.string.loading_list_contact))
   }
 
   override fun layout(): Int {
@@ -93,6 +93,7 @@ class ListContactFragment : BaseFragment() {
       if (list.isNotEmpty()) {
         val models = list.map {
           ContactUiModel(
+              id = it.contactInfo.id,
               contactUpdateInfo = it
           )
         }

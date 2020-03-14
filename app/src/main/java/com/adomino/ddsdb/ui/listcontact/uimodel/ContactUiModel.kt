@@ -4,8 +4,9 @@ import com.adomino.ddsdb.data.ContactUpdateInfo
 import com.adomino.ddsdb.recyclerview.XModel
 
 data class ContactUiModel(
+  val id: Int,
   val contactUpdateInfo: ContactUpdateInfo
-) : XModel() {
+) : XModel(id) {
 
   override fun viewType(): Int {
     return 0
