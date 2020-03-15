@@ -21,8 +21,14 @@ import com.adomino.ddsdb.di.scope.FragmentScope
 import com.adomino.ddsdb.helper.resource.ResourceProvider
 import com.adomino.ddsdb.recyclerview.XAdapter
 import com.adomino.ddsdb.ui.listcontact.uimodel.ContactUiModel
+import com.adomino.ddsdb.ui.listcontact.uimodel.ContactUpdateFailUiModel
+import com.adomino.ddsdb.ui.listcontact.uimodel.ContactUpdateUIModel
+import com.adomino.ddsdb.ui.listcontact.uimodel.EmptyResultUiModel
 import com.adomino.ddsdb.ui.listcontact.viewholder.EmptyResultViewHolder
 import com.adomino.ddsdb.ui.listcontact.viewholder.ListContactViewHolder
+import com.adomino.ddsdb.ui.listcontact.viewholder.UpdateFailViewHolder
+import com.adomino.ddsdb.ui.listcontact.viewholder.UpdateLoadingViewHolder
+import com.adomino.ddsdb.util.UIHelper
 import javax.inject.Inject
 
 @FragmentScope
@@ -51,17 +57,27 @@ class ListContactFragment : BaseFragment() {
 
   private val swipeRefreshLayout: SwipeRefreshLayout by bindView(R.id.swipeRefreshLayout)
 
+  fun shareContact() {
+    UIHelper.showToast(requireContext(), "OK", Toast.LENGTH_SHORT)
+  }
+
   private val adapter: XAdapter = XAdapter.create { viewGroup: ViewGroup, viewType: Int ->
     when (viewType) {
-      0 -> {
+      ContactUiModel.VIEW_TYPE -> {
         ListContactViewHolder.create(viewGroup)
       }
-      1 -> {
+      EmptyResultUiModel.VIEW_TYPE -> {
         LayoutInflater.from(requireContext())
             .inflate(R.layout.result_empty_notify_text, viewGroup, false)
             .run {
               EmptyResultViewHolder(this)
             }
+      }
+      ContactUpdateUIModel.VIEW_TYPE -> {
+        UpdateLoadingViewHolder.create(viewGroup)
+      }
+      ContactUpdateFailUiModel.VIEW_TYPE -> {
+        UpdateFailViewHolder.create(viewGroup)
       }
       else -> {
         LoadingViewHolder.create(viewGroup)
@@ -70,7 +86,7 @@ class ListContactFragment : BaseFragment() {
   }
 
   private val loadingUiModel by lazy {
-    LoadingUiModel(1111, requireContext().getString(R.string.loading_list_contact))
+    LoadingUiModel("loading", requireContext().getString(R.string.loading_list_contact))
   }
 
   override fun layout(): Int {
@@ -79,7 +95,6 @@ class ListContactFragment : BaseFragment() {
 
   override fun onInitUI(view: View) {
     swipeRefreshLayout.setOnRefreshListener {
-      adapter.submitChange(loadingUiModel)
       viewModel.loadContactList()
     }
 
@@ -87,26 +102,56 @@ class ListContactFragment : BaseFragment() {
     recyclerView.addItemDecoration(
         DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
     )
-    adapter.submitChange(loadingUiModel)
+
+    viewModel.loading.observe(viewLifecycleOwner, Observer { showLoading ->
+      if (showLoading) {
+        adapter.submitChange(loadingUiModel)
+      }
+    })
 
     viewModel.contactList.observe(viewLifecycleOwner, Observer { list ->
       swipeRefreshLayout.isRefreshing = false
       if (list.isNotEmpty()) {
         val models = list.map {
           ContactUiModel(
-              id = it.contactInfo.id,
+              id = "contact${it.contactInfo.id}",
               contactUpdateInfo = it
           )
         }
         adapter.submitChange(models)
       } else {
-        adapter.submitChange(loadingUiModel)
+        adapter.submitChange(EmptyResultUiModel(id = "emptyResult"))
       }
     })
 
-    viewModel.updateContact.observe(this, Observer {  updateResult ->
+    viewModel.updateContact.observe(this, Observer { updateResult ->
       if (updateResult) {
-        Toast.makeText(requireContext(), "OK", Toast.LENGTH_SHORT).show()
+        UIHelper.showToast(
+            requireContext(),
+            requireContext().getString(R.string.contact_update_head_number_success),
+            Toast.LENGTH_SHORT
+        )
+        viewModel.loadContactList()
+      } else {
+        UIHelper.showToast(
+            requireContext(), requireContext().getString(R.string.contact_update_head_number_fail),
+            Toast.LENGTH_SHORT
+        )
+        adapter.submitChange(
+            ContactUpdateFailUiModel(
+                requireContext().getString(R.string.reload)
+            ) {
+              viewModel.loadContactList()
+            }
+        )
+      }
+    })
+
+    viewModel.loadingUpdateContact.observe(this, Observer { showUpdateLoading ->
+      if (showUpdateLoading) {
+        adapter.submitChange(
+            ContactUpdateUIModel(requireContext().getString(R.string.contact_updating_message))
+        )
       }
     })
   }

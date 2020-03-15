@@ -9,7 +9,6 @@ import java.util.List;
 public class XAdapter extends ListAdapter<XModel, XViewHolder> {
 
   private XViewHolder.Factory viewHolderFactory;
-  private XClickListener listener;
 
   private XAdapter() {
     super(new XDiffUtil());
@@ -28,11 +27,6 @@ public class XAdapter extends ListAdapter<XModel, XViewHolder> {
 
   @Override public int getItemViewType(int position) {
     return getItem(position).viewType();
-  }
-
-  public XAdapter setItemClickListener(XClickListener listener) {
-    this.listener = listener;
-    return this;
   }
 
   @Override
@@ -58,8 +52,5 @@ public class XAdapter extends ListAdapter<XModel, XViewHolder> {
   @Override
   public void onBindViewHolder(@NonNull XViewHolder holder, int position) {
     holder.bind(getItem(position));
-    if (listener != null) {
-      listener.onSepUpItemClick(holder.itemView, getItem(position), position);
-    }
   }
 }

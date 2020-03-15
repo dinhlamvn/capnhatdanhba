@@ -15,10 +15,16 @@ class ContactService @Inject constructor(
   }
 
   override fun updateContact(
-    updateInfo: ContactInfo
+    contacts: List<ContactInfo>
   ): Single<Boolean> {
     return Single.fromCallable {
-      contactTask.update(updateInfo)
+      contacts.forEach { contact ->
+        val result = contactTask.update(contact)
+        if (!result) {
+          return@fromCallable false
+        }
+      }
+      true
     }
   }
 }

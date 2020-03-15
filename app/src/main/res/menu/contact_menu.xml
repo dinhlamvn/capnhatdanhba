@@ -6,11 +6,11 @@
       android:title="@string/contact_update_head_number" />
 
   <item
-      android:id="@+id/itemCorrectList"
-      android:title="@string/contact_list_correct" />
+      android:id="@+id/itemAddContact"
+      android:title="@string/contact_list_add" />
 
   <item
-      android:id="@+id/itemInCorrectList"
-      android:title="@string/contact_list_incorrect" />
+      android:id="@+id/itemShareContact"
+      android:title="@string/contact_list_share" />
 
 </menu>

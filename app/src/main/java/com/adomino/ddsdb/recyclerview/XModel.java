@@ -2,9 +2,9 @@ package com.adomino.ddsdb.recyclerview;
 
 public abstract class XModel {
 
-  private int id = 0;
+  private String id = "";
 
-  public XModel(int id) {
+  public XModel(String id) {
     this.id = id;
   }
 
@@ -17,7 +17,12 @@ public abstract class XModel {
   }
 
   protected int id() {
-    return (id * hashId() + 32 * id);
+    int hash = 7;
+    int len = Math.min(32, this.id.length());
+    for (int i = 0; i < len; ++i) {
+      hash = hash * 31 + this.id.charAt(i);
+    }
+    return hash + hashId();
   }
 
   public abstract int viewType();

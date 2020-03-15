@@ -2,10 +2,13 @@ package com.adomino.ddsdb.ui.listcontact.uimodel
 
 import com.adomino.ddsdb.recyclerview.XModel
 
-class EmptyResultUiModel(id: String) : XModel(id) {
+data class ContactUpdateFailUiModel(
+  val message: String,
+  val onReload: () -> Unit
+) : XModel("contactUpdateFail") {
 
   companion object {
-    const val VIEW_TYPE = 1
+    const val VIEW_TYPE = 3
   }
 
   override fun viewType(): Int {
@@ -13,6 +16,6 @@ class EmptyResultUiModel(id: String) : XModel(id) {
   }
 
   override fun hashId(): Int {
-    return hashCode()
+    return 1001
   }
 }

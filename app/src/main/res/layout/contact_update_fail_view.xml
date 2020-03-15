@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/loadingLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
     >
 
-  <ProgressBar
-      android:id="@+id/pgLoading"
+  <androidx.appcompat.widget.AppCompatTextView
+      android:id="@+id/tvExplain"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center"
+      android:gravity="center"
+      android:padding="8dp"
+      android:text="@string/contact_update_head_number_fail_expl"
+      android:textSize="14sp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       />
 
-  <TextView
-      android:id="@+id/tvLoading"
+  <androidx.appcompat.widget.AppCompatTextView
+      android:id="@+id/tvReload"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
+      android:background="@drawable/background_contact_item"
+      android:gravity="center"
+      android:text="@string/reload"
+      android:textColor="@color/colorPrimary"
       android:textSize="14sp"
-      app:layout_constraintEnd_toEndOf="@id/pgLoading"
-      app:layout_constraintStart_toStartOf="@id/pgLoading"
-      app:layout_constraintTop_toBottomOf="@id/pgLoading"
-      tools:text="Loading..."
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/tvExplain"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

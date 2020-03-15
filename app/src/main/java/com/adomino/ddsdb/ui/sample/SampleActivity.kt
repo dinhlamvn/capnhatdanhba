@@ -2,7 +2,6 @@ package com.adomino.ddsdb.ui.sample
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,18 +19,11 @@ class SampleActivity : AppCompatActivity() {
 
     recyclerView.layoutManager = LinearLayoutManager(this)
     val adapter = XAdapter.create { viewGroup, _ ->
-          SampleViewHolder(
-              LayoutInflater.from(this@SampleActivity)
-                  .inflate(R.layout.text_view_1, viewGroup, false)
-          )
-        }
-        .setItemClickListener { view, model, position ->
-          view?.setOnClickListener {
-            val sample = model as SampleModel
-            Toast.makeText(this@SampleActivity, "Hello ${sample.name}", Toast.LENGTH_LONG)
-                .show()
-          }
-        }
+      SampleViewHolder(
+          LayoutInflater.from(this@SampleActivity)
+              .inflate(R.layout.text_view_1, viewGroup, false)
+      )
+    }
     recyclerView.adapter = adapter
 
     val models = mutableListOf<XModel>()

@@ -25,15 +25,21 @@ class Contacts(private val resolver: ContentResolver) : ContactTask {
       val result: MutableList<ContactInfo> = mutableListOf()
       if (css.moveToFirst()) {
         do {
-          val id = css.getInt(css.getColumnIndex(
-              ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-          ))
-          val displayName = css.getString(css.getColumnIndex(
-              ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
-          ))
-          val phoneNumber = css.getString(css.getColumnIndex(
-              ContactsContract.CommonDataKinds.Phone.NUMBER
-          ))
+          val id = css.getInt(
+              css.getColumnIndex(
+                  ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+              )
+          )
+          val displayName = css.getString(
+              css.getColumnIndex(
+                  ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
+              )
+          )
+          val phoneNumber = css.getString(
+              css.getColumnIndex(
+                  ContactsContract.CommonDataKinds.Phone.NUMBER
+              )
+          )
           val contactInfo = ContactInfo(
               id = id,
               displayName = displayName,
@@ -52,16 +58,14 @@ class Contacts(private val resolver: ContentResolver) : ContactTask {
 
   override fun update(contactInfo: ContactInfo): Boolean {
     val ops = arrayListOf<ContentProviderOperation>()
-    val whereClause = "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} = ? and " +
-        "${ContactsContract.Data.MIMETYPE} = ?"
-    val params = arrayOf(
-        contactInfo.id.toString(),
-        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE
+    val whereClause = "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} = ?"
+    val params = arrayOf(contactInfo.id.toString())
+    ops.add(
+        ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+            .withSelection(whereClause, params)
+            .withValue(ContactsContract.CommonDataKinds.Phone.DATA, contactInfo.phoneNumber)
+            .build()
     )
-    ops.add(ContentProviderOperation.newUpdate(ContactsContract.RawContacts.CONTENT_URI)
-        .withSelection(whereClause, params)
-        .withValue(ContactsContract.CommonDataKinds.Phone.DATA, contactInfo.phoneNumber)
-        .build())
     resolver.applyBatch(ContactsContract.AUTHORITY, ops)
     return true
   }
@@ -72,9 +76,11 @@ class Contacts(private val resolver: ContentResolver) : ContactTask {
     val params = arrayOf(
         contactInfo.id.toString()
     )
-    ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
-        .withSelection(whereClause, params)
-        .build())
+    ops.add(
+        ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+            .withSelection(whereClause, params)
+            .build()
+    )
     resolver.applyBatch(ContactsContract.AUTHORITY, ops)
     return contactInfo
   }

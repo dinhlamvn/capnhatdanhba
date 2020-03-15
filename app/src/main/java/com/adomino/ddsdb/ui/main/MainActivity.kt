@@ -37,9 +37,9 @@ class MainActivity : BaseActivity(),
         override fun getFragment(position: Int): Fragment {
           return when (position) {
             0 -> listContactFragment
-            1 -> listContactFragment
-            3 -> listContactFragment
-            else -> listContactFragment
+            1 -> ListContactFragment.create()
+            3 -> ListContactFragment.create()
+            else -> ListContactFragment.create()
           }
         }
 
@@ -101,6 +101,11 @@ class MainActivity : BaseActivity(),
       if (menuItem.itemId == R.id.itemUpdate) {
         val fragmentListContact = viewPagerAdapter.getFragmentAtPosition(0) as ListContactFragment
         fragmentListContact.viewModel.updateContact()
+      } else if (menuItem.itemId == R.id.itemAddContact) {
+
+      } else if (menuItem.itemId == R.id.itemShareContact) {
+        val fragmentListContact = viewPagerAdapter.getFragmentAtPosition(0) as ListContactFragment
+        fragmentListContact.shareContact()
       }
       true
     }
@@ -111,7 +116,8 @@ class MainActivity : BaseActivity(),
     Dexter.withActivity(this)
         .withPermissions(
             Manifest.permission.READ_CONTACTS,
-            Manifest.permission.WRITE_CONTACTS
+            Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.CALL_PHONE
         )
         .withListener(object : MultiplePermissionsListener {
           override fun onPermissionsChecked(report: MultiplePermissionsReport) {}

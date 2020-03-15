@@ -41,7 +41,12 @@
   <string name="bottom_bar_contact_duplicate">Số trùng</string>
   <string name="bottom_bar_contact_invalid">Số rác</string>
   <string name="contact_update_head_number">Cập nhật đầu số</string>
-  <string name="contact_list_correct">Đầu số hợp lệ</string>
-  <string name="contact_list_incorrect">Đầu số không hợp lệ</string>
+  <string name="contact_list_add">Thêm liên lạc</string>
+  <string name="contact_list_share">Chia sẻ liên lạc</string>
+  <string name="contact_updating_message">Đang cập nhật danh bạ</string>
+  <string name="contact_update_head_number_fail">Có lỗi trong quá trình cập nhật.</string>
+  <string name="contact_update_head_number_success">Cập nhật thành công.</string>
+  <string name="contact_update_head_number_fail_expl">Cập nhật đầu số thất bại, vui lòng kiểm tra lại quyền truy cập danh bạ của ứng dụng đã được cung cấp hay chưa.</string>
+  <string name="reload"><![CDATA[<u><b>Tải lại danh sách danh bạ.</b></u>]]></string>
 
 </resources>

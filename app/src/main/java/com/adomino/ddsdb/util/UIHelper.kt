@@ -4,8 +4,10 @@ import android.content.Context
 import android.os.Looper
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.MainThread
 import androidx.annotation.MenuRes
+import androidx.annotation.NonNull
 import androidx.appcompat.widget.PopupMenu
 
 object UIHelper {
@@ -26,6 +28,19 @@ object UIHelper {
             popupListener.invoke(menuItem)
           }
         }
+        .show()
+  }
+
+  @MainThread
+  fun showToast(
+    uiContext: Context,
+    @NonNull message: CharSequence,
+    mode: Int = Toast.LENGTH_SHORT
+  ) {
+    check(Looper.myLooper() == Looper.getMainLooper()) {
+      "Just show toast on Main Thread."
+    }
+    Toast.makeText(uiContext, message, mode)
         .show()
   }
 }
