@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <item
+      android:id="@+id/itemUpdate"
+      android:title="@string/contact_update_head_number" />
+
+  <item
+      android:id="@+id/itemCorrectList"
+      android:title="@string/contact_list_correct" />
+
+  <item
+      android:id="@+id/itemInCorrectList"
+      android:title="@string/contact_list_incorrect" />
+
+</menu>

@@ -9,6 +9,7 @@ import com.adomino.ddsdb.base.BaseActivity
 import com.adomino.ddsdb.common.ViewPagerFragmentFactory
 import com.adomino.ddsdb.common.bindView
 import com.adomino.ddsdb.ui.listcontact.ListContactFragment
+import com.adomino.ddsdb.util.UIHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.karumi.dexter.Dexter
@@ -21,7 +22,7 @@ class MainActivity : BaseActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener,
     BottomNavigationView.OnNavigationItemReselectedListener {
 
-  private val btnExecute: FloatingActionButton by bindView(R.id.fbtExecute)
+  private val btnMenu: FloatingActionButton by bindView(R.id.fbtMenu)
 
   private val bottomView: BottomNavigationView by bindView(R.id.bnvFunction)
 
@@ -30,12 +31,15 @@ class MainActivity : BaseActivity(),
   private val viewPagerAdapter = ViewPagerAdapter(
       this,
       object : ViewPagerFragmentFactory {
+
+        val listContactFragment = ListContactFragment.create()
+
         override fun getFragment(position: Int): Fragment {
           return when (position) {
-            0 -> ListContactFragment.create()
-            1 -> ListContactFragment.create()
-            3 -> ListContactFragment.create()
-            else -> ListContactFragment.create()
+            0 -> listContactFragment
+            1 -> listContactFragment
+            3 -> listContactFragment
+            else -> listContactFragment
           }
         }
 
@@ -86,6 +90,20 @@ class MainActivity : BaseActivity(),
     viewPager.adapter = viewPagerAdapter
     viewPager.registerOnPageChangeCallback(pageChangeCallback)
     bottomView.setOnNavigationItemSelectedListener(this)
+
+    btnMenu.setOnClickListener {
+      showPopupMenu()
+    }
+  }
+
+  private fun showPopupMenu() {
+    UIHelper.showPopupMenu(this, btnMenu, R.menu.contact_menu) { menuItem ->
+      if (menuItem.itemId == R.id.itemUpdate) {
+        val fragmentListContact = viewPagerAdapter.getFragmentAtPosition(0) as ListContactFragment
+        fragmentListContact.viewModel.updateContact()
+      }
+      true
+    }
   }
 
   override fun onStart() {

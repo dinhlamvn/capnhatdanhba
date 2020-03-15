@@ -7,5 +7,8 @@ interface LocalService {
 
   interface Contact {
     fun fetchContactList(): Single<List<ContactInfo>>
+    fun updateContact(
+      updateInfo: ContactInfo
+    ): Single<Boolean>
   }
 }

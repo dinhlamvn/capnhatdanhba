@@ -13,4 +13,12 @@ class ContactService @Inject constructor(
       contactTask.load()
     }
   }
+
+  override fun updateContact(
+    updateInfo: ContactInfo
+  ): Single<Boolean> {
+    return Single.fromCallable {
+      contactTask.update(updateInfo)
+    }
+  }
 }

@@ -40,5 +40,8 @@
   <string name="bottom_bar_contact_title">Danh bạ</string>
   <string name="bottom_bar_contact_duplicate">Số trùng</string>
   <string name="bottom_bar_contact_invalid">Số rác</string>
+  <string name="contact_update_head_number">Cập nhật đầu số</string>
+  <string name="contact_list_correct">Đầu số hợp lệ</string>
+  <string name="contact_list_incorrect">Đầu số không hợp lệ</string>
 
 </resources>

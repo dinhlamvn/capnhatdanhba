@@ -18,12 +18,16 @@ class ListContactViewModel @Inject constructor(
   val contactList: LiveData<List<ContactUpdateInfo>>
     get() = _contactList
 
+  private val _updateContact = SingleLiveEvent<Boolean>()
+  val updateContact: LiveData<Boolean>
+    get() = _updateContact
+
   init {
     loadContactList()
   }
 
   fun updateContact() {
-
+    _updateContact.submitChange(true)
   }
 
   fun loadContactList() {
