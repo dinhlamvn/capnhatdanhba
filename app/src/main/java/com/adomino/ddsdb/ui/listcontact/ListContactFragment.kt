@@ -1,10 +1,12 @@
 package com.adomino.ddsdb.ui.listcontact
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,17 +21,25 @@ import com.adomino.ddsdb.common.model.LoadingUiModel
 import com.adomino.ddsdb.common.viewholder.LoadingViewHolder
 import com.adomino.ddsdb.di.scope.FragmentScope
 import com.adomino.ddsdb.helper.resource.ResourceProvider
+import com.adomino.ddsdb.helper.router.Router
 import com.adomino.ddsdb.recyclerview.XAdapter
+import com.adomino.ddsdb.recyclerview.XModel
 import com.adomino.ddsdb.ui.listcontact.uimodel.ContactUiModel
 import com.adomino.ddsdb.ui.listcontact.uimodel.ContactUpdateFailUiModel
 import com.adomino.ddsdb.ui.listcontact.uimodel.ContactUpdateUIModel
 import com.adomino.ddsdb.ui.listcontact.uimodel.EmptyResultUiModel
+import com.adomino.ddsdb.ui.listcontact.viewholder.ContactItemViewHolder
 import com.adomino.ddsdb.ui.listcontact.viewholder.EmptyResultViewHolder
-import com.adomino.ddsdb.ui.listcontact.viewholder.ListContactViewHolder
 import com.adomino.ddsdb.ui.listcontact.viewholder.UpdateFailViewHolder
 import com.adomino.ddsdb.ui.listcontact.viewholder.UpdateLoadingViewHolder
 import com.adomino.ddsdb.util.UIHelper
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import javax.inject.Inject
+import kotlin.system.exitProcess
 
 @FragmentScope
 class ListContactFragment : BaseFragment() {
@@ -53,6 +63,9 @@ class ListContactFragment : BaseFragment() {
   @Inject
   lateinit var viewModel: ListContactViewModel
 
+  @Inject
+  lateinit var router: Router
+
   private val recyclerView: RecyclerView by bindView(R.id.recyclerView)
 
   private val swipeRefreshLayout: SwipeRefreshLayout by bindView(R.id.swipeRefreshLayout)
@@ -61,22 +74,22 @@ class ListContactFragment : BaseFragment() {
     UIHelper.showToast(requireContext(), "OK", Toast.LENGTH_SHORT)
   }
 
-  private val adapter: XAdapter = XAdapter.create { viewGroup: ViewGroup, viewType: Int ->
-    when (viewType) {
-      ContactUiModel.VIEW_TYPE -> {
-        ListContactViewHolder.create(viewGroup)
+  private val adapter: XAdapter = XAdapter.create { viewGroup: ViewGroup, model: XModel ->
+    when (model) {
+      is ContactUiModel -> {
+        ContactItemViewHolder.create(viewGroup)
       }
-      EmptyResultUiModel.VIEW_TYPE -> {
+      is EmptyResultUiModel -> {
         LayoutInflater.from(requireContext())
             .inflate(R.layout.result_empty_notify_text, viewGroup, false)
             .run {
               EmptyResultViewHolder(this)
             }
       }
-      ContactUpdateUIModel.VIEW_TYPE -> {
+      is ContactUpdateUIModel -> {
         UpdateLoadingViewHolder.create(viewGroup)
       }
-      ContactUpdateFailUiModel.VIEW_TYPE -> {
+      is ContactUpdateFailUiModel -> {
         UpdateFailViewHolder.create(viewGroup)
       }
       else -> {
@@ -87,6 +100,43 @@ class ListContactFragment : BaseFragment() {
 
   private val loadingUiModel by lazy {
     LoadingUiModel("loading", requireContext().getString(R.string.loading_list_contact))
+  }
+
+  override fun onStart() {
+    super.onStart()
+    Dexter.withActivity(requireActivity())
+        .withPermissions(
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.CALL_PHONE
+        )
+        .withListener(object : MultiplePermissionsListener {
+          override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+            if (report.areAllPermissionsGranted()) {
+              viewModel.syncContactsToDatabase()
+            } else {
+              val alertDialog = AlertDialog.Builder(requireContext())
+                  .setTitle("Permission required.")
+                  .setMessage("Please allow app's permission to access your contact.")
+                  .setPositiveButton("OK") { _, _ ->
+
+                  }
+                  .setNegativeButton("Cancel") { _, _ ->
+                    exitProcess(-1)
+                  }
+                  .create()
+              alertDialog.show()
+            }
+          }
+
+          override fun onPermissionRationaleShouldBeShown(
+            permissions: List<PermissionRequest>,
+            token: PermissionToken
+          ) {
+            token.continuePermissionRequest()
+          }
+        })
+        .check()
   }
 
   override fun layout(): Int {
@@ -115,7 +165,13 @@ class ListContactFragment : BaseFragment() {
         val models = list.map {
           ContactUiModel(
               id = "contact${it.contactInfo.id}",
-              contactUpdateInfo = it
+              contactUpdateInfo = it,
+              actionCall = View.OnClickListener { _ ->
+                router.startCall(requireContext(), it.contactInfo.phoneNumber)
+              },
+              actionItemClick = View.OnClickListener {
+                UIHelper.showToast(requireContext(), "On Item Click")
+              }
           )
         }
         adapter.submitChange(models)

@@ -25,7 +25,7 @@ abstract class BaseViewModel : ViewModel() {
     compositeDisposable.clear()
   }
 
-  private fun Disposable.disposableOnClear() {
+  protected fun Disposable.disposableOnClear() {
     compositeDisposable.add(this)
   }
 
@@ -34,11 +34,10 @@ abstract class BaseViewModel : ViewModel() {
     success: T.() -> Unit
   ) {
     this.subscribe({ response ->
-          success.invoke(response)
-        }, { t ->
-          error?.invoke(t)
-        }
-        )
+      success.invoke(response)
+    }, { t ->
+      error?.invoke(t)
+    })
         .disposableOnClear()
   }
 

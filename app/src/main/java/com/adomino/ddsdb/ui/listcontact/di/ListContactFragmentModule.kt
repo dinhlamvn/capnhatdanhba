@@ -26,12 +26,5 @@ interface ListContactFragmentModule {
 
   @Module
   object Provision {
-
-    @Provides
-    @JvmStatic
-    fun provideViewModel(fragment: ListContactFragment): ListContactViewModel {
-      return ViewModelProviders.of(fragment, fragment.factory)
-          .get(ListContactViewModel::class.java)
-    }
   }
 }

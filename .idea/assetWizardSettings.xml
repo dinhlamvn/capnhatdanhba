@@ -28,7 +28,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="ffffff" />
+                            <entry key="color" value="584dd5" />
                             <entry key="outputName" value="ic_call" />
                             <entry key="sourceFile" value="$PROJECT_DIR$/../icons/iconfinder_User_Interface-27_2044261.svg" />
                           </map>

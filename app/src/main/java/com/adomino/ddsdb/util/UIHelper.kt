@@ -2,6 +2,7 @@ package com.adomino.ddsdb.util
 
 import android.content.Context
 import android.os.Looper
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -35,12 +36,16 @@ object UIHelper {
   fun showToast(
     uiContext: Context,
     @NonNull message: CharSequence,
-    mode: Int = Toast.LENGTH_SHORT
+    mode: Int = Toast.LENGTH_SHORT,
+    gravity: Int = Gravity.BOTTOM
   ) {
     check(Looper.myLooper() == Looper.getMainLooper()) {
       "Just show toast on Main Thread."
     }
     Toast.makeText(uiContext, message, mode)
+        .apply {
+          setGravity(gravity, 0, 0)
+        }
         .show()
   }
 }

@@ -15,18 +15,19 @@ public class XAdapter extends ListAdapter<XModel, XViewHolder> {
     setHasStableIds(true);
   }
 
-  public static XAdapter create(XViewHolder.Factory viewHolderFactory) {
+  public static XAdapter create(@NonNull XViewHolder.Factory viewHolderFactory) {
     XAdapter instance = new XAdapter();
     instance.setViewHolderFactory(viewHolderFactory);
     return instance;
   }
 
-  private void setViewHolderFactory(XViewHolder.Factory viewHolderFactory) {
+  private void setViewHolderFactory(@NonNull XViewHolder.Factory viewHolderFactory) {
     this.viewHolderFactory = viewHolderFactory;
   }
 
-  @Override public int getItemViewType(int position) {
-    return getItem(position).viewType();
+  @Override
+  public int getItemViewType(int position) {
+    return position;
   }
 
   @Override
@@ -45,7 +46,7 @@ public class XAdapter extends ListAdapter<XModel, XViewHolder> {
   @NonNull
   @Override
   public XViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    return viewHolderFactory.create(parent, viewType);
+    return viewHolderFactory.create(parent, getItem(viewType));
   }
 
   @SuppressWarnings("unchecked")

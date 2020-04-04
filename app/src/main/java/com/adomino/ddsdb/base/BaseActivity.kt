@@ -5,8 +5,12 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.MainThread
 import androidx.appcompat.app.ActionBar
 import dagger.android.support.DaggerAppCompatActivity
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 abstract class BaseActivity : DaggerAppCompatActivity() {
+
+  private val compositeDisposable = CompositeDisposable()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -19,8 +23,13 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
     onInitUI()
   }
 
+  override fun onDestroy() {
+    super.onDestroy()
+    compositeDisposable.clear()
+  }
+
   open fun onActionBarConfiguration(actionBar: ActionBar) {
-    
+
   }
 
   @LayoutRes
@@ -39,5 +48,9 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
         actionbar.subtitle = subTitle
       }
     }
+  }
+
+  protected fun Disposable.disposeOnDestroy() {
+    compositeDisposable.add(this)
   }
 }

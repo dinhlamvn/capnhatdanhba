@@ -8,6 +8,8 @@ import com.adomino.ddsdb.helper.contact.Contacts
 import com.adomino.ddsdb.helper.resource.DrawableProvider
 import com.adomino.ddsdb.helper.resource.ResourceProvider
 import com.adomino.ddsdb.helper.resource.StringProvider
+import com.adomino.ddsdb.helper.router.AppRouter
+import com.adomino.ddsdb.helper.router.Router
 import com.adomino.ddsdb.interactor.local.ContactService
 import com.adomino.ddsdb.interactor.local.LocalService
 import com.adomino.ddsdb.ui.main.MainActivityModule
@@ -16,8 +18,10 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [AppModule.Binding::class,
-  MainActivityModule::class])
+@Module(
+    includes = [AppModule.Binding::class,
+      MainActivityModule::class]
+)
 class AppModule {
 
   @Module
@@ -27,6 +31,9 @@ class AppModule {
 
     @Binds
     fun bindContactService(contactService: ContactService): LocalService.Contact
+
+    @Binds
+    fun bindAppRouter(appRouter: AppRouter): Router
   }
 
   @Provides

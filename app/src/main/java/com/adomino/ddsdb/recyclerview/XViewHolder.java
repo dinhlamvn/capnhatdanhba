@@ -8,14 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public abstract class XViewHolder<T extends XModel> extends RecyclerView.ViewHolder {
 
   public interface Factory {
-    XViewHolder create(ViewGroup viewGroup, int viewType);
+    XViewHolder create(ViewGroup viewGroup, XModel model);
   }
 
   public XViewHolder(@NonNull View itemView) {
     super(itemView);
   }
 
-  public void bind(@NonNull T model) {
-    
-  }
+  public abstract void bind(@NonNull T model);
 }

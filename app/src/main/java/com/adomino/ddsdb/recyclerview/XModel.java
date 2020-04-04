@@ -17,15 +17,6 @@ public abstract class XModel {
   }
 
   protected int id() {
-    int hash = 7;
-    int len = Math.min(32, this.id.length());
-    for (int i = 0; i < len; ++i) {
-      hash = hash * 31 + this.id.charAt(i);
-    }
-    return hash + hashId();
+    return XIds.id(this.id) + hashCode();
   }
-
-  public abstract int viewType();
-
-  public abstract int hashId();
 }

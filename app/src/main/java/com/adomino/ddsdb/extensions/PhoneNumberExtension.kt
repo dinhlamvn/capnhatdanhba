@@ -51,15 +51,17 @@ fun String.mapToNewPhoneNumber(): String {
       if (newPhoneNumber.isNotEmpty()) return newPhoneNumber else return@inner
     }
   }
-
-  return ""
+  return this
 }
 
 fun String.isValidHeadNumber() = mapToNewPhoneNumber().isEmpty()
 
 fun String.isInvalidHeadNumber() = mapToNewPhoneNumber().isNotEmpty()
 
-fun String.hasNotAnySpace() = this.replace(" ", "", ignoreCase = true)
+fun String.hasNotAnySpace() = this.filter { c ->
+  c.isWhitespace()
+      .not()
+}
 
 private fun mapToNew(
   phoneNumber: String,
@@ -74,15 +76,16 @@ private fun mapToNew(
 }
 
 infix fun String.phoneNumberEqualsTo(other: String): Boolean {
-  val p1 = startWithZero(this.hasNotAnySpace())
-  val p2 = startWithZero(other.hasNotAnySpace())
+  val p1 = this.hasNotAnySpace()
+      .asStartZero()
+  val p2 = other.hasNotAnySpace()
+      .asStartZero()
   return p1 == p2
 }
 
-private fun startWithZero(phoneNumber: String): String {
-  val newPhoneNumber = phoneNumber.map { c -> if (c < '0' || c > '9') "" else c.toString() }
-      .filter { s -> s.isNotEmpty() }
-      .joinToString(prefix = "", separator = "", postfix = "")
+fun String.asStartZero(): String {
+  val newPhoneNumber = this
+      .filter { c -> c.isDigit() }
   if (newPhoneNumber.startsWith("84")) {
     return "0" + newPhoneNumber.substring(2)
   }

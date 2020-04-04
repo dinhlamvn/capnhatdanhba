@@ -1,6 +1,5 @@
 package com.adomino.ddsdb.ui.main
 
-import android.Manifest
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
@@ -8,15 +7,13 @@ import com.adomino.ddsdb.R
 import com.adomino.ddsdb.base.BaseActivity
 import com.adomino.ddsdb.common.ViewPagerFragmentFactory
 import com.adomino.ddsdb.common.bindView
+import com.adomino.ddsdb.database.repository.ContactRepository
+import com.adomino.ddsdb.interactor.local.LocalService
 import com.adomino.ddsdb.ui.listcontact.ListContactFragment
 import com.adomino.ddsdb.util.UIHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import javax.inject.Inject
 
 class MainActivity : BaseActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener,
@@ -27,6 +24,12 @@ class MainActivity : BaseActivity(),
   private val bottomView: BottomNavigationView by bindView(R.id.bnvFunction)
 
   private val viewPager: ViewPager2 by bindView(R.id.viewPager)
+
+  @Inject
+  lateinit var repository: ContactRepository
+
+  @Inject
+  lateinit var contactService: LocalService.Contact
 
   private val viewPagerAdapter = ViewPagerAdapter(
       this,
@@ -98,35 +101,20 @@ class MainActivity : BaseActivity(),
 
   private fun showPopupMenu() {
     UIHelper.showPopupMenu(this, btnMenu, R.menu.contact_menu) { menuItem ->
-      if (menuItem.itemId == R.id.itemUpdate) {
-        val fragmentListContact = viewPagerAdapter.getFragmentAtPosition(0) as ListContactFragment
-        fragmentListContact.viewModel.updateContact()
-      } else if (menuItem.itemId == R.id.itemAddContact) {
+      when (menuItem.itemId) {
+        R.id.itemUpdate -> {
+          val fragmentListContact = viewPagerAdapter.getFragmentAtPosition(0) as ListContactFragment
+          fragmentListContact.viewModel.updateContact()
+        }
+        R.id.itemAddContact -> {
 
-      } else if (menuItem.itemId == R.id.itemShareContact) {
-        val fragmentListContact = viewPagerAdapter.getFragmentAtPosition(0) as ListContactFragment
-        fragmentListContact.shareContact()
+        }
+        R.id.itemShareContact -> {
+          val fragmentListContact = viewPagerAdapter.getFragmentAtPosition(0) as ListContactFragment
+          fragmentListContact.shareContact()
+        }
       }
       true
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-    Dexter.withActivity(this)
-        .withPermissions(
-            Manifest.permission.READ_CONTACTS,
-            Manifest.permission.WRITE_CONTACTS,
-            Manifest.permission.CALL_PHONE
-        )
-        .withListener(object : MultiplePermissionsListener {
-          override fun onPermissionsChecked(report: MultiplePermissionsReport) {}
-          override fun onPermissionRationaleShouldBeShown(
-            permissions: List<PermissionRequest>,
-            token: PermissionToken
-          ) {
-          }
-        })
-        .check()
   }
 }
