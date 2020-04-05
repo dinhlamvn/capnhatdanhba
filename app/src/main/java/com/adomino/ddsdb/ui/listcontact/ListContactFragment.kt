@@ -2,7 +2,6 @@ package com.adomino.ddsdb.ui.listcontact
 
 import android.Manifest
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -24,6 +23,7 @@ import com.adomino.ddsdb.helper.resource.ResourceProvider
 import com.adomino.ddsdb.helper.router.Router
 import com.adomino.ddsdb.recyclerview.XAdapter
 import com.adomino.ddsdb.recyclerview.XModel
+import com.adomino.ddsdb.recyclerview.XViewHolder
 import com.adomino.ddsdb.ui.listcontact.uimodel.ContactUiModel
 import com.adomino.ddsdb.ui.listcontact.uimodel.ContactUpdateFailUiModel
 import com.adomino.ddsdb.ui.listcontact.uimodel.ContactUpdateUIModel
@@ -77,23 +77,23 @@ class ListContactFragment : BaseFragment() {
   private val adapter: XAdapter = XAdapter.create { viewGroup: ViewGroup, model: XModel ->
     when (model) {
       is ContactUiModel -> {
-        ContactItemViewHolder.create(viewGroup)
+        XViewHolder.create(ContactItemViewHolder::class.java, viewGroup, R.layout.contact_item_view)
       }
       is EmptyResultUiModel -> {
-        LayoutInflater.from(requireContext())
-            .inflate(R.layout.result_empty_notify_text, viewGroup, false)
-            .run {
-              EmptyResultViewHolder(this)
-            }
+        XViewHolder.create(
+            EmptyResultViewHolder::class.java, viewGroup, R.layout.result_empty_notify_text
+        )
       }
       is ContactUpdateUIModel -> {
-        UpdateLoadingViewHolder.create(viewGroup)
+        XViewHolder.create(UpdateLoadingViewHolder::class.java, viewGroup, R.layout.loading)
       }
       is ContactUpdateFailUiModel -> {
-        UpdateFailViewHolder.create(viewGroup)
+        XViewHolder.create(
+            UpdateFailViewHolder::class.java, viewGroup, R.layout.contact_update_fail_view
+        )
       }
       else -> {
-        LoadingViewHolder.create(viewGroup)
+        XViewHolder.create(LoadingViewHolder::class.java, viewGroup, R.layout.loading)
       }
     }
   }
